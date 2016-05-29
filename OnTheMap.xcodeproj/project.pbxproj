@@ -14,6 +14,7 @@
 		DDF517F61CF9F87200432297 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DDF517F41CF9F87200432297 /* LaunchScreen.storyboard */; };
 		DDF518011CF9F87200432297 /* OnTheMapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF518001CF9F87200432297 /* OnTheMapTests.swift */; };
 		DDF5180C1CF9F87200432297 /* OnTheMapUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF5180B1CF9F87200432297 /* OnTheMapUITests.swift */; };
+		DDFDB3B41CFAC43A00E99FC1 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDFDB3B31CFAC43A00E99FC1 /* LoginViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		DDF518071CF9F87200432297 /* OnTheMapUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnTheMapUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDF5180B1CF9F87200432297 /* OnTheMapUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnTheMapUITests.swift; sourceTree = "<group>"; };
 		DDF5180D1CF9F87200432297 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DDFDB3B31CFAC43A00E99FC1 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 			children = (
 				DDF517EB1CF9F87200432297 /* AppDelegate.swift */,
 				DDF517ED1CF9F87200432297 /* ViewController.swift */,
+				DDFDB3B31CFAC43A00E99FC1 /* LoginViewController.swift */,
 				DDF517EF1CF9F87200432297 /* Main.storyboard */,
 				DDF517F21CF9F87200432297 /* Assets.xcassets */,
 				DDF517F41CF9F87200432297 /* LaunchScreen.storyboard */,
@@ -256,6 +259,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DDFDB3B41CFAC43A00E99FC1 /* LoginViewController.swift in Sources */,
 				DDF517EE1CF9F87200432297 /* ViewController.swift in Sources */,
 				DDF517EC1CF9F87200432297 /* AppDelegate.swift in Sources */,
 			);
@@ -484,6 +488,7 @@
 				DDF518121CF9F87200432297 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DDF518131CF9F87200432297 /* Build configuration list for PBXNativeTarget "OnTheMapTests" */ = {
 			isa = XCConfigurationList;
@@ -492,6 +497,7 @@
 				DDF518151CF9F87200432297 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DDF518161CF9F87200432297 /* Build configuration list for PBXNativeTarget "OnTheMapUITests" */ = {
 			isa = XCConfigurationList;
@@ -500,6 +506,7 @@
 				DDF518181CF9F87200432297 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
