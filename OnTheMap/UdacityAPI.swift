@@ -18,12 +18,6 @@ struct Udacity {
     //MARK: Method
     static let Session = "/session"
     
-    static func udacityURL() -> NSURL {
-        let components = NSURLComponents()
-        components.scheme = Udacity.ApiScheme
-        components.host = Udacity.ApiHhost
-        components.path = Udacity.ApiPath + Udacity.Session
-        
-        return components.URL!
-    }
+    //MARK: JSON
+    static let jsonBody = "{\"udacity\": {\"username\": \"{email}\", \"password\": \"{***}\"}}"
 }
