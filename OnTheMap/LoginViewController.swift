@@ -18,7 +18,7 @@ class LoginViewController: UIViewController {
     
     @IBAction func loginButtonPressed(sender: AnyObject) {
         
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
+        let request = NSMutableURLRequest(URL: Udacity.udacityURL())
         request.HTTPMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -57,9 +57,17 @@ class LoginViewController: UIViewController {
                 return
             }
             
-            print(sessionId)
+            dispatch_async(dispatch_get_main_queue(), { 
+                self.completeLogin()
+            })
         }
         
         task.resume()
     }
+    
+    func completeLogin() {
+        let masterTabController = storyboard!.instantiateViewControllerWithIdentifier("MasterTabController") as! UITabBarController
+        presentViewController(masterTabController, animated: true, completion: nil)
+    }
+    
 }
