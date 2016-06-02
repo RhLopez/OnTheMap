@@ -19,7 +19,7 @@ struct StudentInformation {
     var updatedAt: String?
     
     init(dictionary: [String:AnyObject]) {
-        firstName = dictionary["fistName"] as? String
+        firstName = dictionary["firstName"] as? String
         lastName = dictionary["lastName"] as? String
         longitude = dictionary["longitude"] as? Float
         latitude = dictionary["latitude"] as? Float
@@ -27,4 +27,5 @@ struct StudentInformation {
         mediaURL = dictionary["mediaURL"] as? String
         updatedAt = dictionary["updatedAt"] as? String
     }
+    
 }
