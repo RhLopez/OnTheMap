@@ -10,6 +10,9 @@ import Foundation
 
 class Student: NSObject {
     
+    var firstName: String?
+    var lastName: String?
+    
     var students = [StudentInformation]()
     
     class func sharedInstance() -> Student {

@@ -12,14 +12,18 @@ class API: NSObject {
     
     let session = NSURLSession.sharedSession()
     
+    var udacitySessionID: String?
+    
     func udacityLogin(email: String, password: String, completionHandlerForLogin: (success: Bool, errorString: String?) -> Void) {
         
+        // TODO: Extract request code to own file
         let request = NSMutableURLRequest(URL: udacityURL())
         request.HTTPMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.HTTPBody = "{\"udacity\": {\"username\": \"\(email)\", \"password\": \"\(password)\"}}".dataUsingEncoding(NSUTF8StringEncoding)
         
+        // TODO: Extract parsing code to own file
         let task = session.dataTaskWithRequest(request) { (data, response, error) in
             
             guard (error == nil) else {
@@ -52,6 +56,8 @@ class API: NSObject {
                 return
             }
             
+            self.udacitySessionID = sessionID
+            
             completionHandlerForLogin(success: true, errorString: nil)
         }
         
@@ -60,10 +66,12 @@ class API: NSObject {
     
     func loginToParse(completionHandlerForParse: (success: Bool, errorString: String?) -> Void) {
        
+        // TODO: Extract request code to own file
         let request = NSMutableURLRequest(URL: NSURL(string: "https://api.parse.com/1/classes/StudentLocation?limit=100")!)
         request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
         
+        // TODO: Extract parsing code to own file
         let task = session.dataTaskWithRequest(request) { (data, response, error) in
             
             guard (error == nil) else {
@@ -133,6 +141,7 @@ class API: NSObject {
                 let informationDictionary: [String:AnyObject] = [
                     "firstName": firstName,
                     "lastName": lastName,
+                    "uniqueKey": uniqueKey,
                     "longitude": longitude,
                     "latitude": latitude,
                     "mapString": mapString,
@@ -148,6 +157,7 @@ class API: NSObject {
         task.resume()
     }
     
+    // TODO: Combine url functions into one
     func udacityURL() -> NSURL {
         let components = NSURLComponents()
         components.scheme = Udacity.ApiScheme
