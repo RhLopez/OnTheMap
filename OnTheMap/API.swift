@@ -10,7 +10,9 @@ import Foundation
 
 class API: NSObject {
     
-    static func udacityLogin(email: String, password: String, completionHandlerForLogin: (success: Bool, errorString: String?) -> Void) {
+    let session = NSURLSession.sharedSession()
+    
+    func udacityLogin(email: String, password: String, completionHandlerForLogin: (success: Bool, errorString: String?) -> Void) {
         
         let request = NSMutableURLRequest(URL: udacityURL())
         request.HTTPMethod = "POST"
@@ -18,7 +20,6 @@ class API: NSObject {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.HTTPBody = "{\"udacity\": {\"username\": \"\(email)\", \"password\": \"\(password)\"}}".dataUsingEncoding(NSUTF8StringEncoding)
         
-        let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { (data, response, error) in
             
             guard (error == nil) else {
@@ -57,13 +58,12 @@ class API: NSObject {
         task.resume()
     }
     
-    static func loginToParse(completionHandlerForParse: (success: Bool, errorString: String?) -> Void) {
+    func loginToParse(completionHandlerForParse: (success: Bool, errorString: String?) -> Void) {
        
         let request = NSMutableURLRequest(URL: NSURL(string: "https://api.parse.com/1/classes/StudentLocation?limit=100")!)
         request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
         
-        let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { (data, response, error) in
             
             guard (error == nil) else {
@@ -97,6 +97,11 @@ class API: NSObject {
                 
                 guard let lastName = item["lastName"] as? String else {
                     print("No value for key 'lastName'")
+                    return
+                }
+                
+                guard let uniqueKey = item["uniqueKey"] as? String else {
+                    print("No value for key 'uniqueKey")
                     return
                 }
                 
@@ -143,7 +148,7 @@ class API: NSObject {
         task.resume()
     }
     
-    static func udacityURL() -> NSURL {
+    func udacityURL() -> NSURL {
         let components = NSURLComponents()
         components.scheme = Udacity.ApiScheme
         components.host = Udacity.ApiHhost
@@ -160,5 +165,12 @@ class API: NSObject {
         components.query = Parse.classes + Parse.studentLocation
         
         return components.URL!
+    }
+    
+    class func sharedInstance() -> API {
+        struct Singleton {
+            static var sharedInstance = API()
+        }
+        return Singleton.sharedInstance
     }
 }

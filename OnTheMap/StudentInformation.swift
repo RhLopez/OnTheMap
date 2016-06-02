@@ -12,6 +12,7 @@ struct StudentInformation {
     
     var firstName: String?
     var lastName: String?
+    var uniqueKey: String?
     var longitude: Float?
     var latitude: Float?
     var mapString: String?
@@ -21,6 +22,7 @@ struct StudentInformation {
     init(dictionary: [String:AnyObject]) {
         firstName = dictionary["firstName"] as? String
         lastName = dictionary["lastName"] as? String
+        uniqueKey = dictionary["uniqueKey"] as? String
         longitude = dictionary["longitude"] as? Float
         latitude = dictionary["latitude"] as? Float
         mapString = dictionary["mapString"] as? String

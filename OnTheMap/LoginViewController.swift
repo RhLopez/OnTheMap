@@ -17,7 +17,7 @@ class LoginViewController: UIViewController {
     
     
     @IBAction func loginButtonPressed(sender: AnyObject) {
-        API.udacityLogin(emailTextField.text!, password: passwordTextField.text!) { (success, errorString) in
+        API.sharedInstance().udacityLogin(emailTextField.text!, password: passwordTextField.text!) { (success, errorString) in
             dispatch_async(dispatch_get_main_queue(), { 
                 if success {
                     self.completeLogin()

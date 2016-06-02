@@ -20,7 +20,7 @@ class MapViewController: UIViewController {
     }
     
     func processParseLogin() {
-        API.loginToParse { (success, errorString) in
+        API.sharedInstance().loginToParse { (success, errorString) in
             dispatch_async(dispatch_get_main_queue(), {
                 if success {
                     self.mapSetup()

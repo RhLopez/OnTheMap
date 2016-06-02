@@ -8,18 +8,22 @@
 
 import Foundation
 
-struct Parse {
+extension API {
     
+    struct Parse {
+
     // MARL; API Keys
     static let ApplicationID = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
     static let RestAPIKEy = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
-    
+
     // MARK: URL
     static let ApiScheme = "https"
     static let ApiHost = "api.parse.com"
     static let ApiPath = "/1"
-    
+
     // MARK: Method
     static let classes = "/classes"
     static let studentLocation = "/StudentLocation"
+    }
+    
 }

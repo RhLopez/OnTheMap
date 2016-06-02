@@ -8,16 +8,20 @@
 
 import Foundation
 
-struct Udacity {
+extension API {
     
-    // MARK: URL
-    static let ApiScheme = "https"
-    static let ApiHhost = "www.udacity.com"
-    static let ApiPath = "/api"
+    struct Udacity {
+        
+        // MARK: URL
+        static let ApiScheme = "https"
+        static let ApiHhost = "www.udacity.com"
+        static let ApiPath = "/api"
+        
+        //MARK: Method
+        static let Session = "/session"
+        
+        //MARK: JSON
+        static let jsonBody = "{\"udacity\": {\"username\": \"{email}\", \"password\": \"{***}\"}}"
+    }
     
-    //MARK: Method
-    static let Session = "/session"
-    
-    //MARK: JSON
-    static let jsonBody = "{\"udacity\": {\"username\": \"{email}\", \"password\": \"{***}\"}}"
 }
