@@ -45,6 +45,8 @@ class LoginViewController: UIViewController {
         let padding = UIView(frame: CGRectMake(0,0,15,textField.frame.height))
         textField.leftView = padding
         textField.leftViewMode = UITextFieldViewMode.Always
+        let placeholderString = textField.tag == 0 ? "Email" : "Password"
+        textField.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
         textField.delegate = self
     }
     
