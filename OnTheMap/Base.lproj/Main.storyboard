@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
         <!--Login View Controller-->
@@ -17,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="  Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="a5a-bX-sXX">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="a5a-bX-sXX">
                                 <rect key="frame" x="20" y="220" width="560" height="48"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.43141163793103449" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -25,7 +26,12 @@
                                 </constraints>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="_placeholderLabel.textColor">
+                                        <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hhL-Fi-vnD">
                                 <rect key="frame" x="20" y="353" width="560" height="48"/>
@@ -41,7 +47,7 @@
                                     <action selector="loginButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="e5V-UQ-7mA"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="  Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Bfy-m0-Fb7">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Bfy-m0-Fb7">
                                 <rect key="frame" x="20" y="285" width="560" height="48"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.43141163789999998" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -49,7 +55,12 @@
                                 </constraints>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="_placeholderLabel.textColor">
+                                        <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gmh-RJ-Y18">
                                 <rect key="frame" x="194" y="418" width="213" height="30"/>
@@ -71,15 +82,20 @@
                                     <constraint firstAttribute="height" constant="80" id="LMF-rm-QWP"/>
                                 </constraints>
                             </imageView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="6Bx-d5-fnw">
+                                <rect key="frame" x="282" y="252" width="37" height="37"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="0.51726987395265156" blue="0.16096429904162146" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="hhL-Fi-vnD" firstAttribute="top" secondItem="Bfy-m0-Fb7" secondAttribute="bottom" constant="20" id="0he-hG-q0c"/>
+                            <constraint firstItem="6Bx-d5-fnw" firstAttribute="top" secondItem="a5a-bX-sXX" secondAttribute="bottom" constant="-16" id="6Ul-7o-uZU"/>
                             <constraint firstItem="fup-qy-o1s" firstAttribute="centerX" secondItem="wnJ-zD-kJU" secondAttribute="centerX" id="9Bq-UL-Yab"/>
                             <constraint firstItem="wnJ-zD-kJU" firstAttribute="centerX" secondItem="a5a-bX-sXX" secondAttribute="centerX" id="BRu-ym-9li"/>
                             <constraint firstItem="wnJ-zD-kJU" firstAttribute="top" secondItem="fup-qy-o1s" secondAttribute="bottom" constant="8" id="DBd-Kl-RwO"/>
                             <constraint firstItem="a5a-bX-sXX" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="200" id="Fm9-6l-BAF"/>
                             <constraint firstItem="gmh-RJ-Y18" firstAttribute="top" secondItem="hhL-Fi-vnD" secondAttribute="bottom" constant="17" id="Hco-D5-G3u"/>
+                            <constraint firstItem="6Bx-d5-fnw" firstAttribute="centerX" secondItem="a5a-bX-sXX" secondAttribute="centerX" id="Kdr-WL-8KN"/>
                             <constraint firstItem="Bfy-m0-Fb7" firstAttribute="top" secondItem="a5a-bX-sXX" secondAttribute="bottom" constant="17" id="LtX-vc-6Za"/>
                             <constraint firstItem="a5a-bX-sXX" firstAttribute="top" secondItem="wnJ-zD-kJU" secondAttribute="bottom" constant="13" id="Qxy-60-rkB"/>
                             <constraint firstItem="Bfy-m0-Fb7" firstAttribute="top" secondItem="a5a-bX-sXX" secondAttribute="bottom" constant="17" id="TdL-iZ-j6B"/>
@@ -94,6 +110,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="6Bx-d5-fnw" id="Gfu-PK-3Lc"/>
                         <outlet property="emailTextField" destination="a5a-bX-sXX" id="6KV-Aq-oJt"/>
                         <outlet property="loginButton" destination="hhL-Fi-vnD" id="Znb-We-G7b"/>
                         <outlet property="passwordTextField" destination="Bfy-m0-Fb7" id="ABT-b8-lx5"/>
@@ -115,7 +132,45 @@
                     <view key="view" contentMode="scaleToFill" id="90o-TK-YC0">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7kb-Wj-PAG">
+                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <items>
+                                    <navigationItem title="On The Map" id="4wH-8O-aay">
+                                        <barButtonItem key="leftBarButtonItem" title="Logout" id="y7D-U2-eoe"/>
+                                        <rightBarButtonItems>
+                                            <barButtonItem systemItem="refresh" id="ipm-3p-o3P"/>
+                                            <barButtonItem image="pin" id="4fo-a5-83Q"/>
+                                        </rightBarButtonItems>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="A9P-oj-7AV">
+                                <rect key="frame" x="0.0" y="64" width="600" height="500"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Tjc-fi-MV3">
+                                        <rect key="frame" x="0.0" y="28" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Tjc-fi-MV3" id="p40-6f-1o7">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="A9P-oj-7AV" firstAttribute="leading" secondItem="90o-TK-YC0" secondAttribute="leading" id="4Dg-ti-G98"/>
+                            <constraint firstItem="7kb-Wj-PAG" firstAttribute="leading" secondItem="90o-TK-YC0" secondAttribute="leading" id="M9s-rr-nV1"/>
+                            <constraint firstAttribute="bottom" secondItem="A9P-oj-7AV" secondAttribute="bottom" constant="36" id="SAg-y9-PrQ"/>
+                            <constraint firstAttribute="trailing" secondItem="A9P-oj-7AV" secondAttribute="trailing" id="UWe-qB-V3b"/>
+                            <constraint firstAttribute="trailing" secondItem="7kb-Wj-PAG" secondAttribute="trailing" id="dHC-Gf-UJW"/>
+                            <constraint firstItem="7kb-Wj-PAG" firstAttribute="top" secondItem="xoM-OP-aIi" secondAttribute="bottom" id="jtu-JZ-muK"/>
+                            <constraint firstItem="A9P-oj-7AV" firstAttribute="top" secondItem="7kb-Wj-PAG" secondAttribute="bottom" id="r9D-ok-Grq"/>
+                            <constraint firstItem="A9P-oj-7AV" firstAttribute="top" secondItem="7kb-Wj-PAG" secondAttribute="bottom" id="uaf-J5-oKC"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item" image="list" id="cE3-zw-dR6"/>
                 </viewController>
@@ -136,15 +191,21 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="ipc-cS-lFd">
-                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="492"/>
                             </mapView>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6es-BL-kQZ">
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6es-BL-kQZ">
                                 <rect key="frame" x="0.0" y="20" width="600" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="Y4u-qd-P8M"/>
                                 </constraints>
                                 <items>
-                                    <navigationItem title="On The Map" id="xjF-vo-LGB"/>
+                                    <navigationItem title="On The Map" id="xjF-vo-LGB">
+                                        <barButtonItem key="leftBarButtonItem" title="Logout" id="r72-Gp-BQt"/>
+                                        <rightBarButtonItems>
+                                            <barButtonItem systemItem="refresh" id="xbD-EB-3Ji"/>
+                                            <barButtonItem image="pin" id="cTX-IV-uda"/>
+                                        </rightBarButtonItems>
+                                    </navigationItem>
                                 </items>
                             </navigationBar>
                         </subviews>
@@ -160,6 +221,8 @@
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item" image="map" id="ThD-zh-xM3"/>
+                    <toolbarItems/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="mapView" destination="ipc-cS-lFd" id="Wxb-NQ-Lw0"/>
                     </connections>
@@ -190,6 +253,7 @@
     <resources>
         <image name="list" width="32" height="32"/>
         <image name="map" width="32" height="32"/>
+        <image name="pin" width="32" height="32"/>
         <image name="udacity" width="256" height="256"/>
     </resources>
 </document>
