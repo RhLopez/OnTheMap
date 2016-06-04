@@ -18,8 +18,8 @@ class LoginViewController: UIViewController {
     
     
     override func viewDidLoad() {
-        setUpTextField(emailTextField)
-        setUpTextField(passwordTextField)
+        textFieldConfig(emailTextField)
+        textFieldConfig(passwordTextField)
     }
     
     @IBAction func loginButtonPressed(sender: AnyObject) {
@@ -30,7 +30,9 @@ class LoginViewController: UIViewController {
                     self.activityIndicator.stopAnimating()
                     self.completeLogin()
                 } else {
-                    print("Unable to login")
+                    self.activityIndicator.stopAnimating()
+                    self.showNotification()
+                    print(errorString)
                 }
             })
         }
@@ -41,7 +43,7 @@ class LoginViewController: UIViewController {
         presentViewController(masterTabController, animated: true, completion: nil)
     }
     
-    func setUpTextField(textField: UITextField) {
+    func textFieldConfig(textField: UITextField) {
         let padding = UIView(frame: CGRectMake(0,0,15,textField.frame.height))
         textField.leftView = padding
         textField.leftViewMode = UITextFieldViewMode.Always
@@ -50,10 +52,22 @@ class LoginViewController: UIViewController {
         textField.delegate = self
     }
     
+    func showNotification() {
+        let alert = UIAlertController(title: "Alert", message: "Invalid Login, Please try again.", preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
 }
 
 extension LoginViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(textField: UITextField) {
         textField.placeholder = nil
+    }
+    
+    func textFieldDidEndEditing(textField: UITextField) {
+        if textField.text == "" {
+            let textString = textField.tag == 0 ? "Email" : "Password"
+            textField.placeholder = textString
+        }
     }
 }

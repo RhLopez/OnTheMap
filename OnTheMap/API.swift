@@ -48,6 +48,7 @@ class API: NSObject {
             
             guard let session = parsedData["session"] as? [String:AnyObject] else {
                 print("No key 'session' found")
+                completionHandlerForLogin(success: false, errorString: "NOpe")
                 return
             }
             
