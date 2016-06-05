@@ -23,140 +23,97 @@ class API: NSObject {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.HTTPBody = "{\"udacity\": {\"username\": \"\(email)\", \"password\": \"\(password)\"}}".dataUsingEncoding(NSUTF8StringEncoding)
         
-        // TODO: Extract parsing code to own file
-        let task = session.dataTaskWithRequest(request) { (data, response, error) in
+        taskForPostMethod(request, api: "Udacity") { (data, error) in
             
-            guard (error == nil) else {
-                print("There has been an error")
-                return
+            if let error = error {
+                completionHandlerForLogin(success: false, errorString: error.localizedDescription)
+            } else {
+                API.sharedInstance().parseUdacityLoginData(data) { (success, error) in
+                    if success {
+                        completionHandlerForLogin(success: true, errorString: nil)
+                    } else {
+                        completionHandlerForLogin(success: false, errorString: error?.localizedDescription)
+                    }
+                }
             }
-            
-            guard let data = data else {
-                print("There was no data returned!")
-                return
-            }
-            
-            let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
-            
-            var parsedData: AnyObject!
-            do {
-                parsedData = try NSJSONSerialization.JSONObjectWithData(newData, options: .AllowFragments)
-            } catch {
-                print("Unable to parse data from JSON")
-                return
-            }
-            
-            guard let session = parsedData["session"] as? [String:AnyObject] else {
-                print("No key 'session' found")
-                completionHandlerForLogin(success: false, errorString: "NOpe")
-                return
-            }
-            
-            guard let sessionID = session["id"] as? String else {
-                print("No key id found in session")
-                return
-            }
-            
-            self.udacitySessionID = sessionID
-            
-            completionHandlerForLogin(success: true, errorString: nil)
         }
-        
-        task.resume()
     }
     
     func loginToParse(completionHandlerForParse: (success: Bool, errorString: String?) -> Void) {
        
         // TODO: Extract request code to own file
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://api.parse.com/1/classes/StudentLocation?limit=100")!)
+        let request = NSMutableURLRequest(URL: parseURL())
         request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
         
-        // TODO: Extract parsing code to own file
+        taskForPostMethod(request, api: "Parse") { (data, error) in
+            if let error = error {
+                completionHandlerForParse(success: false, errorString: error.localizedDescription)
+            } else {
+                API.sharedInstance().parseParseData(data, completionHandlerForParseData: { (success, error) in
+                    if success {
+                        completionHandlerForParse(success: true, errorString: nil)
+                    } else {
+                        completionHandlerForParse(success: false, errorString: error?.localizedDescription)
+                    }
+                })
+            }
+        }
+    }
+    
+    func taskForPostMethod(request: NSURLRequest, api: String, completionHandlerForTask: (data: AnyObject!, error: NSError?) -> Void) {
+        
+        var newData: NSData?
+        
         let task = session.dataTaskWithRequest(request) { (data, response, error) in
             
+            func sendError(error: String) {
+                print(error)
+                let userInfo = [NSLocalizedDescriptionKey: error]
+                completionHandlerForTask(data: nil, error: NSError(domain: "taskForPostMethod", code: 1, userInfo: userInfo))
+                return
+            }
+ 
             guard (error == nil) else {
-                print("There has been an error")
+                sendError("There was an error with the request: \(error)")
                 return
             }
-            
+         
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+                sendError("The request did not return a status code 2xx")
+                return
+            }
+        
             guard let data = data else {
-                print("There was no data returned")
+                sendError("There was no data returned in request")
                 return
             }
             
-            var parsedData: AnyObject!
-            do {
-                parsedData = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-            } catch {
-                print("Unable to parse data from JSON")
-                return
+            if api == "Udacity" {
+                newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
+            } else {
+                newData = data
             }
             
-            guard let results = parsedData["results"] as? [[String:AnyObject]] else {
-                print("There is no key 'results' in \(data)")
-                return
-            }
-            
-            for item in results {
-                guard let firstName = item["firstName"] as? String else {
-                    print("No value for key 'firstName'")
-                    return
-                }
-                
-                guard let lastName = item["lastName"] as? String else {
-                    print("No value for key 'lastName'")
-                    return
-                }
-                
-                guard let uniqueKey = item["uniqueKey"] as? String else {
-                    print("No value for key 'uniqueKey")
-                    return
-                }
-                
-                guard let longitude = item["longitude"] as? Float else {
-                    print("No value for key 'longitude'")
-                    return
-                }
-                
-                guard let latitude = item["latitude"] as? Float else {
-                    print("No value for key 'latitude")
-                    return
-                }
-                
-                guard let mapString = item["mapString"] as? String else {
-                    print("No value for key 'mapString'")
-                    return
-                }
-                
-                guard let mediaURL = item["mediaURL"] as? String else {
-                    print("No value for key 'mediaURL")
-                    return
-                }
-                
-                guard let updatedAt = item["updatedAt"] as? String else {
-                    print("No value for key 'updatedAt'")
-                    return
-                }
-                
-                let informationDictionary: [String:AnyObject] = [
-                    "firstName": firstName,
-                    "lastName": lastName,
-                    "uniqueKey": uniqueKey,
-                    "longitude": longitude,
-                    "latitude": latitude,
-                    "mapString": mapString,
-                    "mediaURL": mediaURL,
-                    "updatedAt": updatedAt
-                ]
-                
-                Student.sharedInstance().students.append(StudentInformation(dictionary: informationDictionary))
-            }
-            completionHandlerForParse(success: true, errorString: nil)
+            self.serializeData(newData!, completionHandlerForParseData: completionHandlerForTask)
         }
         
         task.resume()
     }
+    
+    func serializeData(data: NSData, completionHandlerForParseData: (parsedData: AnyObject!, error: NSError?) -> Void) {
+        var parsedData: AnyObject!
+        
+        do {
+            parsedData = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+        } catch {
+            let userInfo = [NSLocalizedDescriptionKey: "Unable to parse JSON in \(data)"]
+            completionHandlerForParseData(parsedData: nil, error: NSError(domain: "parseData", code: 1, userInfo: userInfo))
+        }
+        
+        completionHandlerForParseData(parsedData: parsedData, error: nil)
+    }
+    
     
     // TODO: Combine url functions into one
     func udacityURL() -> NSURL {
@@ -172,8 +129,7 @@ class API: NSObject {
         let components = NSURLComponents()
         components.scheme = Parse.ApiScheme
         components.host = Parse.ApiHost
-        components.path = Parse.ApiPath
-        components.query = Parse.classes + Parse.studentLocation
+        components.path = Parse.ApiPath + Parse.classes + Parse.studentLocation
         
         return components.URL!
     }

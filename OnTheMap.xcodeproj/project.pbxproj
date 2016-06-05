@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		DD0335F81CFBB4E1002F52B2 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD0335F71CFBB4E1002F52B2 /* MapViewController.swift */; };
 		DD0335FA1CFC0D2A002F52B2 /* StudentInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD0335F91CFC0D2A002F52B2 /* StudentInformation.swift */; };
+		DD17CBBD1D034F63002BBEE1 /* APIConvinience.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD17CBBC1D034F63002BBEE1 /* APIConvinience.swift */; };
 		DD4D43DC1CFCAED600FB03D4 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4D43DB1CFCAED600FB03D4 /* API.swift */; };
 		DD4D43E01CFCB01000FB03D4 /* UdacityAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4D43DF1CFCB01000FB03D4 /* UdacityAPI.swift */; };
 		DD4D43E21CFCBCB600FB03D4 /* ParseAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4D43E11CFCBCB600FB03D4 /* ParseAPI.swift */; };
@@ -44,6 +45,7 @@
 /* Begin PBXFileReference section */
 		DD0335F71CFBB4E1002F52B2 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		DD0335F91CFC0D2A002F52B2 /* StudentInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentInformation.swift; sourceTree = "<group>"; };
+		DD17CBBC1D034F63002BBEE1 /* APIConvinience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIConvinience.swift; sourceTree = "<group>"; };
 		DD4D43DB1CFCAED600FB03D4 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		DD4D43DF1CFCB01000FB03D4 /* UdacityAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityAPI.swift; sourceTree = "<group>"; };
 		DD4D43E11CFCBCB600FB03D4 /* ParseAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseAPI.swift; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				DD4D43DB1CFCAED600FB03D4 /* API.swift */,
+				DD17CBBC1D034F63002BBEE1 /* APIConvinience.swift */,
 				DD4D43E11CFCBCB600FB03D4 /* ParseAPI.swift */,
 				DD4D43DF1CFCB01000FB03D4 /* UdacityAPI.swift */,
 			);
@@ -313,6 +316,7 @@
 				DD4D43E01CFCB01000FB03D4 /* UdacityAPI.swift in Sources */,
 				DD0335FA1CFC0D2A002F52B2 /* StudentInformation.swift in Sources */,
 				DDC8674F1D02821500238CB1 /* ListTableViewController.swift in Sources */,
+				DD17CBBD1D034F63002BBEE1 /* APIConvinience.swift in Sources */,
 				DD0335F81CFBB4E1002F52B2 /* MapViewController.swift in Sources */,
 				DD4D43DC1CFCAED600FB03D4 /* API.swift in Sources */,
 				DDC867511D02843500238CB1 /* ListCustomCell.swift in Sources */,
