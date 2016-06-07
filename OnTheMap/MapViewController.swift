@@ -55,6 +55,19 @@ class MapViewController: UIViewController {
         
         self.mapView.addAnnotations(annotations)
     }
+    
+    func showInvalidURLAlert() {
+        let alert = UIAlertController(title: "Alert", message: "Invalid URL", preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    func verifyURL(urlString: String) -> Bool {
+        if let url = NSURL(string: urlString) {
+            return UIApplication.sharedApplication().canOpenURL(url)
+        }
+        return false
+    }
 }
 
 extension MapViewController: MKMapViewDelegate {
@@ -78,9 +91,12 @@ extension MapViewController: MKMapViewDelegate {
     
     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if control == view.rightCalloutAccessoryView {
-            let app = UIApplication.sharedApplication()
             if let url = view.annotation?.subtitle! {
-                app.openURL(NSURL(string: url)!)
+                if verifyURL(url) {
+                    UIApplication.sharedApplication().openURL(NSURL(string: url)!)
+                } else {
+                    showInvalidURLAlert()
+                }
             }
         }
     }
