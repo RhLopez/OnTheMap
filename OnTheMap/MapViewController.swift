@@ -68,6 +68,18 @@ class MapViewController: UIViewController {
         }
         return false
     }
+    
+    @IBAction func logoutButtonPressed(sender: AnyObject) {
+        API.sharedInstance().logoutUdacity { (success, errorString) in
+            if success {
+                dispatch_async(dispatch_get_main_queue(), { 
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                })
+            } else {
+                print("Unable to logout")
+            }
+        }
+    }
 }
 
 extension MapViewController: MKMapViewDelegate {
@@ -101,3 +113,4 @@ extension MapViewController: MKMapViewDelegate {
         }
     }
 }
+

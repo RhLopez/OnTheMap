@@ -15,7 +15,23 @@ class ListTableViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
         listTableView.reloadData()
+        
+        //TODO: Hide navigation bar on scroll
+        
     }
+    
+    @IBAction func logoutButtonPressed(sender: AnyObject) {
+        API.sharedInstance().logoutUdacity { (success, errorString) in
+            if success {
+                dispatch_async(dispatch_get_main_queue(), { 
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                })
+            } else {
+                print("Unable to logout")
+            }
+        }
+    }
+    
 }
 
 extension ListTableViewController: UITableViewDataSource {

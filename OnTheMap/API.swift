@@ -61,6 +61,36 @@ class API: NSObject {
         }
     }
     
+    func logoutUdacity(completionHandlerForLogout: (success: Bool, errorString: String?) -> Void) {
+        
+        //TODO: Extraxt request
+        let request = NSMutableURLRequest(URL: udacityURL())
+        request.HTTPMethod = "DELETE"
+        var xsrfCookie: NSHTTPCookie? = nil
+        let sharedCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+        for cookie in sharedCookieStorage.cookies! {
+            if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
+        }
+        if let xsrfCookie = xsrfCookie {
+            request.setValue(xsrfCookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
+        }
+        
+        taskForPostMethod(request, api: "Udacity") { (data, error) in
+            if let error = error {
+                completionHandlerForLogout(success: false, errorString: error.localizedDescription)
+            } else {
+                // Change function name
+                API.sharedInstance().parseUdacityLoginData(data, completionHandlerForLoginData: { (success, error) in
+                    if success {
+                        completionHandlerForLogout(success: true, errorString: nil)
+                    } else {
+                        completionHandlerForLogout(success: false, errorString: error?.localizedDescription)
+                    }
+                })
+            }
+        }
+    }
+    
     func taskForPostMethod(request: NSURLRequest, api: String, completionHandlerForTask: (data: AnyObject!, error: NSError?) -> Void) {
         
         var newData: NSData?
