@@ -38,6 +38,11 @@ class LoginViewController: UIViewController {
         }
     }
     
+    @IBAction func signUpButtonPressed(sender: AnyObject) {
+        UIApplication.sharedApplication().openURL(NSURL(string: "https://www.udacity.com/account/auth#!/signup")!)
+    }
+    
+    
     func completeLogin() {
         let masterTabController = storyboard!.instantiateViewControllerWithIdentifier("MasterTabController") as! UITabBarController
         presentViewController(masterTabController, animated: true, completion: nil)
@@ -53,6 +58,7 @@ class LoginViewController: UIViewController {
     }
     
     func showNotification() {
+        //TODO: Specify if login failed because of connection or incorrect email/password
         let alert = UIAlertController(title: "Alert", message: "Invalid Login, Please try again.", preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         self.presentViewController(alert, animated: true, completion: nil)

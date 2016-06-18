@@ -12,6 +12,14 @@ class Student: NSObject {
     
     var firstName: String?
     var lastName: String?
+    var mediaURL: String?
+    var mapString: String?
+    var latitude: Float?
+    var longitude: Float?
+    var accountKey: String?
+    var registeredAccount: Bool?
+    var objectID: String?
+    var updatedAt: NSDate?
     
     var students = [StudentInformation]()
     

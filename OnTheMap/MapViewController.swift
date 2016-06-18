@@ -12,6 +12,9 @@ import MapKit
 class MapViewController: UIViewController {
     
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
+    var newStudent: Bool?
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,19 +22,33 @@ class MapViewController: UIViewController {
         mapView.delegate = self
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if ((presentedViewController?.isKindOfClass(LocationFinderViewController)) != nil) {
+            Student.sharedInstance().students.removeAll()
+            processParseLogin()
+        }
+    }
+    
     func processParseLogin() {
+        ActivityIndicatorOverlay.shared.showOverlay(mapView)
         API.sharedInstance().loginToParse { (success, errorString) in
             dispatch_async(dispatch_get_main_queue(), {
                 if success {
                     self.mapSetup()
+                    ActivityIndicatorOverlay.shared.hideOverlayView()
                 } else {
-                    print("no success")
+                    print(errorString)
                 }
             })
         }
     }
     
     func mapSetup() {
+        
+        mapView.removeAnnotations(mapView.annotations)
+        
         var annotations = [MKPointAnnotation]()
         
         
@@ -70,15 +87,67 @@ class MapViewController: UIViewController {
     }
     
     @IBAction func logoutButtonPressed(sender: AnyObject) {
+        ActivityIndicatorOverlay.shared.showOverlay(mapView)
         API.sharedInstance().logoutUdacity { (success, errorString) in
             if success {
-                dispatch_async(dispatch_get_main_queue(), { 
+                dispatch_async(dispatch_get_main_queue(), {
+                    Student.sharedInstance().students.removeAll()
                     self.dismissViewControllerAnimated(true, completion: nil)
                 })
             } else {
                 print("Unable to logout")
             }
         }
+    }
+    
+    @IBAction func refreshButtonPressed(sender: AnyObject) {
+        Student.sharedInstance().students.removeAll()
+        processParseLogin()
+    }
+    
+    @IBAction func postLocationButtonPressed(sender: AnyObject) {
+        API.sharedInstance().queryStudentLocation { (success, errorString) in
+            dispatch_async(dispatch_get_main_queue(), {
+                if success {
+                    self.studentLocationPostedAlert()
+                } else {
+                    self.newStudent = true
+                    self.performSegueWithIdentifier("postStudentLocation", sender: self)
+                }
+            })
+        }
+    }
+    
+    func studentLocationPostedAlert() {
+        let message = "User \(Student.sharedInstance().firstName!) \(Student.sharedInstance().lastName!) has already\nPosted a Student Location. Do you\nwant to overwrite the location?"
+        let alert = UIAlertController(title: "Alert", message: message, preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "Overwrite", style: .Default, handler: { (alert: UIAlertAction!) in
+            self.newStudent = false
+            self.performSegueWithIdentifier("postStudentLocation", sender: self)
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: nil))
+        presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "postStudentLocation" {
+            let controller = segue.destinationViewController as! LocationFinderViewController
+            controller.newStudent = self.newStudent!
+        }
+    }
+    
+    func loadingOverlay() -> UIAlertController {
+        let alert = UIAlertController(title: nil, message: "Please Wait...", preferredStyle: .Alert)
+        alert.view.tintColor = UIColor.blackColor()
+        
+        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(10, 5, 50, 50)) as UIActivityIndicatorView
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        loadingIndicator.startAnimating()
+        
+        alert.view.addSubview(loadingIndicator)
+        
+        return alert
     }
 }
 
