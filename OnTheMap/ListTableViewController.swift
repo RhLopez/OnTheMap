@@ -12,7 +12,7 @@ class ListTableViewController: UIViewController {
     
     @IBOutlet weak var listTableView: UITableView!
     
-    var newStudent: Bool?
+    var newPosting: Bool?
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -50,7 +50,7 @@ class ListTableViewController: UIViewController {
                     if locationPosted == true {
                         self.studentLocationPostedAlert()
                     } else {
-                        self.newStudent = true
+                        self.newPosting = true
                         self.performSegueWithIdentifier("postStudentLocation", sender: self)
                     }
                 })
@@ -78,7 +78,7 @@ class ListTableViewController: UIViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "postStudentLocation" {
             let controller = segue.destinationViewController as! LocationFinderViewController
-            controller.newStudent = self.newStudent!
+            controller.newPosting = self.newPosting!
         }
     }
     
@@ -86,7 +86,7 @@ class ListTableViewController: UIViewController {
         let message = "User \(Student.sharedInstance().firstName!) \(Student.sharedInstance().lastName!) has already\nPosted a Student Location. Do you\nwant to overwrite the location?"
         let alert = UIAlertController(title: "Alert", message: message, preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "Overwrite", style: .Default, handler: { (alert: UIAlertAction!) in
-            self.newStudent = false
+            self.newPosting = false
             self.performSegueWithIdentifier("postStudentLocation", sender: self)
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: nil))

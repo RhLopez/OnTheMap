@@ -19,7 +19,7 @@ class LocationFinderViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var linkTextView: UITextView!
     
-    var newStudent: Bool?
+    var newPosting: Bool?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,7 +55,7 @@ class LocationFinderViewController: UIViewController {
         } else {
             Student.sharedInstance().mapString = locationTextView.text!
             Student.sharedInstance().mediaURL = linkTextView.text!
-            if newStudent == true {
+            if newPosting == true {
                 Parse.sharedInstance().postStudentLocation({ (success, errorString) in
                     dispatch_async(dispatch_get_main_queue(), { 
                         if success {
@@ -75,13 +75,6 @@ class LocationFinderViewController: UIViewController {
                         }
                     })
                 })
-//                API.sharedInstance().updateStudentLocation({ (success, errorString) in
-//                    if success {
-//                        dispatch_async(dispatch_get_main_queue(), { 
-//                            self.dismissViewControllerAnimated(true, completion: nil)
-//                        })
-//                    }
-//                })
             }
         }
     }

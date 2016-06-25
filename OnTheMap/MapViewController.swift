@@ -14,7 +14,7 @@ class MapViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
-    var newStudent: Bool?
+    var newPosting: Bool?
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,7 +100,7 @@ class MapViewController: UIViewController {
                     if locationPosted == true {
                         self.studentLocationPostedAlert()
                     } else {
-                        self.newStudent = true
+                        self.newPosting = true
                         self.performSegueWithIdentifier("postStudentLocation", sender: self)
                     }
                 })
@@ -114,7 +114,7 @@ class MapViewController: UIViewController {
         let message = "User \(Student.sharedInstance().firstName!) \(Student.sharedInstance().lastName!) has already\nPosted a Student Location. Do you\nwant to overwrite the location?"
         let alert = UIAlertController(title: "Alert", message: message, preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "Overwrite", style: .Default, handler: { (alert: UIAlertAction!) in
-            self.newStudent = false
+            self.newPosting = false
             self.performSegueWithIdentifier("postStudentLocation", sender: self)
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: nil))
@@ -124,7 +124,7 @@ class MapViewController: UIViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "postStudentLocation" {
             let controller = segue.destinationViewController as! LocationFinderViewController
-            controller.newStudent = self.newStudent!
+            controller.newPosting = self.newPosting!
         }
     }
     

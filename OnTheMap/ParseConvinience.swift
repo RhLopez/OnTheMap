@@ -96,11 +96,12 @@ extension Parse {
     }
     
     func updateStudentLocation(completionHandlerForUpdateLocation: (success: Bool, errorString: String?) -> Void) {
+        let parameters = [String:AnyObject]()
         let student = Student.sharedInstance()
         let pathExtension = "/\(student.objectID!)"
         let jsonBody = "{\"uniqueKey\": \"\(student.userId!)\", \"firstName\": \"\(student.firstName!)\", \"lastName\": \"\(student.lastName!)\",\"mapString\": \"\(student.mapString!)\", \"mediaURL\": \"\(student.mediaURL!)\",\"latitude\": \(student.latitude!), \"longitude\": \(student.longitude!)}"
         
-        taskForPutMethod(pathExtension, parameters: nil, jsonBody: jsonBody) { (results, error) in
+        taskForPutMethod(pathExtension, parameters: parameters , jsonBody: jsonBody) { (results, error) in
             if let error = error {
                 print(error)
                 completionHandlerForUpdateLocation(success: false, errorString: "Unable to update Student Location.\nPlease try again.")

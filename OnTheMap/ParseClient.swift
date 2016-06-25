@@ -83,17 +83,14 @@ class Parse {
         task.resume()
     }
     
-    func taskForPutMethod(pathExtension: String, parameters: [String:AnyObject]?, jsonBody: String, completionHandlerForPutMethod: (results: AnyObject!, error: NSError?) -> Void) {
+    func taskForPutMethod(pathExtension: String, parameters: [String:AnyObject], jsonBody: String, completionHandlerForPutMethod: (results: AnyObject!, error: NSError?) -> Void) {
         let request = NSMutableURLRequest(URL: parseUrl(parameters, pathExtension: pathExtension))
         request.HTTPMethod = "PUT"
         request.addValue(Constants.ApplicationID, forHTTPHeaderField: Constants.ApplicationHeader)
         request.addValue(Constants.RestAPIKey, forHTTPHeaderField: Constants.RestHeader)
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue(Request.ApplicatonJson, forHTTPHeaderField: Request.ContentType)
         request.HTTPBody = jsonBody.dataUsingEncoding(NSUTF8StringEncoding)
-        
-        self.serializeData(request.HTTPBody!) { (parsedData, error) in
-            print(parsedData!)
-        }
+
         let task = session.dataTaskWithRequest(request) { (data, response, error) in
             
             func reportError(error: String) {
@@ -136,19 +133,17 @@ class Parse {
         completionHandlerForSerialization(parsedData: parsedData, error: nil)
     }
     
-    func parseUrl(parameters: [String:AnyObject]?, pathExtension: String?) -> NSURL {
+    func parseUrl(parameters: [String:AnyObject], pathExtension: String?) -> NSURL {
         let components = NSURLComponents()
         
         components.scheme = Constants.ApiScheme
         components.host = Constants.ApiHost
         components.path = Constants.ApiPath + Methods.Classes + Methods.StudentLocation + (pathExtension ?? "")
+        components.queryItems = [NSURLQueryItem]()
         
-        if let parameters = parameters {
-            components.queryItems = [NSURLQueryItem]()
-            for (key, value) in parameters {
-                let queryItem = NSURLQueryItem(name: key, value: "\(value)")
-                components.queryItems!.append(queryItem)
-            }
+        for (key, value) in parameters {
+            let queryItem = NSURLQueryItem(name: key, value: "\(value)")
+            components.queryItems!.append(queryItem)
         }
         
         return components.URL!
