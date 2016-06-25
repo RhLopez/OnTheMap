@@ -18,7 +18,7 @@ class MapViewController: UIViewController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        processParseLogin()
+        loadStudentLocations()
         mapView.delegate = self
     }
     
@@ -27,19 +27,20 @@ class MapViewController: UIViewController {
         
         if ((presentedViewController?.isKindOfClass(LocationFinderViewController)) != nil) {
             Student.sharedInstance().students.removeAll()
-            processParseLogin()
+            loadStudentLocations()
         }
     }
     
-    func processParseLogin() {
+    func loadStudentLocations() {
         ActivityIndicatorOverlay.shared.showOverlay(mapView)
-        API.sharedInstance().loginToParse { (success, errorString) in
-            dispatch_async(dispatch_get_main_queue(), {
+        Parse.sharedInstance().getStudentLocations { (success, errorString) in
+            dispatch_async(dispatch_get_main_queue(), { 
                 if success {
                     self.mapSetup()
                     ActivityIndicatorOverlay.shared.hideOverlayView()
                 } else {
-                    print(errorString)
+                    ActivityIndicatorOverlay.shared.hideOverlayView()
+                    AlerView.showAler(self, message: "Unable to retrieve Student Location\nPlease try again.")
                 }
             })
         }
@@ -73,48 +74,39 @@ class MapViewController: UIViewController {
         self.mapView.addAnnotations(annotations)
     }
     
-    func showInvalidURLAlert() {
-        let alert = UIAlertController(title: "Alert", message: "Invalid URL", preferredStyle: .Alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-        self.presentViewController(alert, animated: true, completion: nil)
-    }
-    
-    func verifyURL(urlString: String) -> Bool {
-        if let url = NSURL(string: urlString) {
-            return UIApplication.sharedApplication().canOpenURL(url)
-        }
-        return false
-    }
-    
     @IBAction func logoutButtonPressed(sender: AnyObject) {
         ActivityIndicatorOverlay.shared.showOverlay(mapView)
-        API.sharedInstance().logoutUdacity { (success, errorString) in
-            if success {
-                dispatch_async(dispatch_get_main_queue(), {
+        Udacity.sharedInstance().logOut { (success, errorString) in
+            dispatch_async(dispatch_get_main_queue(), { 
+                if success {
                     Student.sharedInstance().students.removeAll()
                     self.dismissViewControllerAnimated(true, completion: nil)
-                })
-            } else {
-                print("Unable to logout")
-            }
+                } else {
+                    AlerView.showAler(self, message: "Unable to logout./nPlease try again.")
+                }
+            })
         }
     }
     
     @IBAction func refreshButtonPressed(sender: AnyObject) {
         Student.sharedInstance().students.removeAll()
-        processParseLogin()
+        loadStudentLocations()
     }
     
     @IBAction func postLocationButtonPressed(sender: AnyObject) {
-        API.sharedInstance().queryStudentLocation { (success, errorString) in
-            dispatch_async(dispatch_get_main_queue(), {
-                if success {
-                    self.studentLocationPostedAlert()
-                } else {
-                    self.newStudent = true
-                    self.performSegueWithIdentifier("postStudentLocation", sender: self)
-                }
-            })
+        Parse.sharedInstance().queryStudentLocation { (success, locationPosted, errorString) in
+            if success {
+                dispatch_async(dispatch_get_main_queue(), {
+                    if locationPosted == true {
+                        self.studentLocationPostedAlert()
+                    } else {
+                        self.newStudent = true
+                        self.performSegueWithIdentifier("postStudentLocation", sender: self)
+                    }
+                })
+            } else {
+                AlerView.showAler(self, message: "Unable to query Student Location.\nPlease try again.")
+            }
         }
     }
     
@@ -136,18 +128,11 @@ class MapViewController: UIViewController {
         }
     }
     
-    func loadingOverlay() -> UIAlertController {
-        let alert = UIAlertController(title: nil, message: "Please Wait...", preferredStyle: .Alert)
-        alert.view.tintColor = UIColor.blackColor()
-        
-        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(10, 5, 50, 50)) as UIActivityIndicatorView
-        loadingIndicator.hidesWhenStopped = true
-        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
-        loadingIndicator.startAnimating()
-        
-        alert.view.addSubview(loadingIndicator)
-        
-        return alert
+    func verifyURL(urlString: String) -> Bool {
+        if let url = NSURL(string: urlString) {
+            return UIApplication.sharedApplication().canOpenURL(url)
+        }
+        return false
     }
 }
 
@@ -176,7 +161,7 @@ extension MapViewController: MKMapViewDelegate {
                 if verifyURL(url) {
                     UIApplication.sharedApplication().openURL(NSURL(string: url)!)
                 } else {
-                    showInvalidURLAlert()
+                    AlerView.showAler(self, message: "Invalid URL")
                 }
             }
         }

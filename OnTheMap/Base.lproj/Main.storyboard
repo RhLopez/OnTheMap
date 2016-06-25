@@ -76,15 +76,15 @@
                                     <constraint firstAttribute="height" constant="80" id="LMF-rm-QWP"/>
                                 </constraints>
                             </imageView>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="6Bx-d5-fnw">
-                                <rect key="frame" x="283" y="281" width="37" height="37"/>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="6Bx-d5-fnw">
+                                <rect key="frame" x="292" y="289" width="20" height="20"/>
                                 <color key="color" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="0.51726987395265156" blue="0.16096429904162146" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="hhL-Fi-vnD" firstAttribute="top" secondItem="Bfy-m0-Fb7" secondAttribute="bottom" constant="20" id="0he-hG-q0c"/>
-                            <constraint firstItem="6Bx-d5-fnw" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="1" id="3wY-hx-Bjr"/>
+                            <constraint firstItem="6Bx-d5-fnw" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="2" id="3wY-hx-Bjr"/>
                             <constraint firstItem="fup-qy-o1s" firstAttribute="centerX" secondItem="wnJ-zD-kJU" secondAttribute="centerX" id="9Bq-UL-Yab"/>
                             <constraint firstItem="wnJ-zD-kJU" firstAttribute="centerX" secondItem="a5a-bX-sXX" secondAttribute="centerX" id="BRu-ym-9li"/>
                             <constraint firstItem="wnJ-zD-kJU" firstAttribute="top" secondItem="fup-qy-o1s" secondAttribute="bottom" constant="8" id="DBd-Kl-RwO"/>
@@ -92,7 +92,7 @@
                             <constraint firstItem="gmh-RJ-Y18" firstAttribute="top" secondItem="hhL-Fi-vnD" secondAttribute="bottom" constant="17" id="Hco-D5-G3u"/>
                             <constraint firstItem="Bfy-m0-Fb7" firstAttribute="top" secondItem="a5a-bX-sXX" secondAttribute="bottom" constant="17" id="LtX-vc-6Za"/>
                             <constraint firstItem="a5a-bX-sXX" firstAttribute="top" secondItem="wnJ-zD-kJU" secondAttribute="bottom" constant="13" id="Qxy-60-rkB"/>
-                            <constraint firstItem="6Bx-d5-fnw" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="RJh-RF-5Wl"/>
+                            <constraint firstItem="6Bx-d5-fnw" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-1" id="RJh-RF-5Wl"/>
                             <constraint firstItem="Bfy-m0-Fb7" firstAttribute="top" secondItem="a5a-bX-sXX" secondAttribute="bottom" constant="17" id="TdL-iZ-j6B"/>
                             <constraint firstItem="hhL-Fi-vnD" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="cTu-KI-fsu"/>
                             <constraint firstItem="a5a-bX-sXX" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="dRJ-S1-Uvr"/>
@@ -136,7 +136,7 @@
                                         <rect key="frame" x="0.0" y="92" width="600" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Tjc-fi-MV3" id="p40-6f-1o7">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="59"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="59.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pin" translatesAutoresizingMaskIntoConstraints="NO" id="Yjm-Yc-JcP">
@@ -211,16 +211,21 @@
                                     <action selector="refreshButtonPressed:" destination="CFK-J0-0SZ" id="JPB-pI-XEE"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem image="pin" id="LGI-dv-2re"/>
+                            <barButtonItem image="pin" id="LGI-dv-2re">
+                                <connections>
+                                    <action selector="postLocationButtonPressed:" destination="CFK-J0-0SZ" id="KaO-J2-NFo"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="listTableView" destination="A9P-oj-7AV" id="EvO-y3-8IS"/>
+                        <segue destination="JVh-Dz-u23" kind="presentation" identifier="postStudentLocation" id="lA2-U0-Oga"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZsH-gK-TIL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2342" y="614"/>
+            <point key="canvasLocation" x="2406" y="614"/>
         </scene>
         <!--On The Map-->
         <scene sceneID="Hw7-C3-oFB">
@@ -453,7 +458,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UBd-bU-k7s" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3095" y="-103"/>
+            <point key="canvasLocation" x="3271" y="205"/>
         </scene>
         <!--On The Map-->
         <scene sceneID="4Ph-Rc-D19">
@@ -525,4 +530,7 @@
         <image name="pin" width="32" height="32"/>
         <image name="udacity" width="256" height="256"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="lA2-U0-Oga"/>
+    </inferredMetricsTieBreakers>
 </document>

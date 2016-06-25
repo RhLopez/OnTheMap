@@ -23,23 +23,32 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func loginButtonPressed(sender: AnyObject) {
-        activityIndicator.startAnimating()
-        API.sharedInstance().udacityLogin(emailTextField.text!, password: passwordTextField.text!) { (success, errorString) in
-            dispatch_async(dispatch_get_main_queue(), { 
-                if success {
-                    self.activityIndicator.stopAnimating()
-                    self.completeLogin()
-                } else {
-                    self.activityIndicator.stopAnimating()
-                    self.showNotification()
-                    print(errorString)
-                }
+        if emailTextField.hasText() && passwordTextField.hasText() {
+            activityIndicator.startAnimating()
+            Udacity.sharedInstance().logIn(emailTextField.text!, password: passwordTextField.text!, completionHandlerForLogIn: { (success, errorString) in
+                dispatch_async(dispatch_get_main_queue(), { 
+                    if success {
+                        if success {
+                            self.activityIndicator.stopAnimating()
+                            self.completeLogin()
+                        } else {
+                            print(errorString!)
+                            self.activityIndicator.stopAnimating()
+                            AlerView.showAler(self, message: "Unable To Retrieve User Information\nPlease Try Again.")
+                        }
+                    } else {
+                        self.activityIndicator.stopAnimating()
+                        AlerView.showAler(self, message: "Invalid Email/Password")
+                    }
+                })
             })
+        } else {
+            AlerView.showAler(self, message: "Email/Password Field Empty")
         }
     }
     
     @IBAction func signUpButtonPressed(sender: AnyObject) {
-        UIApplication.sharedApplication().openURL(NSURL(string: "https://www.udacity.com/account/auth#!/signup")!)
+        UIApplication.sharedApplication().openURL(Udacity.sharedInstance().signUpUrl())
     }
     
     
@@ -56,13 +65,6 @@ class LoginViewController: UIViewController {
         textField.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
         textField.delegate = self
     }
-    
-    func showNotification() {
-        //TODO: Specify if login failed because of connection or incorrect email/password
-        let alert = UIAlertController(title: "Alert", message: "Invalid Login, Please try again.", preferredStyle: .Alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-        self.presentViewController(alert, animated: true, completion: nil)
-    }
 }
 
 extension LoginViewController: UITextFieldDelegate {
@@ -72,8 +74,7 @@ extension LoginViewController: UITextFieldDelegate {
     
     func textFieldDidEndEditing(textField: UITextField) {
         if textField.text == "" {
-            let textString = textField.tag == 0 ? "Email" : "Password"
-            textField.placeholder = textString
+            textFieldConfig(textField)
         }
     }
 }

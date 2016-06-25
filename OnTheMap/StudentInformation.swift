@@ -30,4 +30,13 @@ struct StudentInformation {
         updatedAt = dictionary["updatedAt"] as? String
     }
     
+    static func studentsFromResults(results: [[String:AnyObject]]) -> [StudentInformation] {
+        var students = [StudentInformation]()
+        
+        for student in results {
+            students.append(StudentInformation(dictionary: student))
+        }
+        
+        return students
+    }
 }

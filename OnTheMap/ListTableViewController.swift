@@ -12,6 +12,8 @@ class ListTableViewController: UIViewController {
     
     @IBOutlet weak var listTableView: UITableView!
     
+    var newStudent: Bool?
+    
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         listTableView.reloadData()
@@ -30,13 +32,30 @@ class ListTableViewController: UIViewController {
     
     @IBAction func logoutButtonPressed(sender: AnyObject) {
         ActivityIndicatorOverlay.shared.showOverlay(listTableView)
-        API.sharedInstance().logoutUdacity { (success, errorString) in
+        Udacity.sharedInstance().logOut { (success, errorString) in
             if success {
-                dispatch_async(dispatch_get_main_queue(), {
+                dispatch_async(dispatch_get_main_queue(), { 
                     self.dismissViewControllerAnimated(true, completion: nil)
                 })
             } else {
-                print("Unable to logout")
+                AlerView.showAler(self, message: "Unable to logout.\nPlease try again.")
+            }
+        }
+    }
+    
+    @IBAction func postLocationButtonPressed(sender: AnyObject) {
+        Parse.sharedInstance().queryStudentLocation { (success, locationPosted, errorString) in
+            if success {
+                dispatch_async(dispatch_get_main_queue(), {
+                    if locationPosted == true {
+                        self.studentLocationPostedAlert()
+                    } else {
+                        self.newStudent = true
+                        self.performSegueWithIdentifier("postStudentLocation", sender: self)
+                    }
+                })
+            } else {
+                AlerView.showAler(self, message: "Unable to query Student Location.\nPlease try again.")
             }
         }
     }
@@ -44,36 +63,34 @@ class ListTableViewController: UIViewController {
     @IBAction func refreshButtonPressed(sender: AnyObject) {
         Student.sharedInstance().students.removeAll()
         ActivityIndicatorOverlay.shared.showOverlay(listTableView)
-        API.sharedInstance().loginToParse { (success, errorString) in
-            dispatch_async(dispatch_get_main_queue(), {
-                if success {
-                   self.listTableView.reloadData()
+        Parse.sharedInstance().getStudentLocations { (success, errorString) in
+            if success {
+                dispatch_async(dispatch_get_main_queue(), { 
+                    self.listTableView.reloadData()
                     ActivityIndicatorOverlay.shared.hideOverlayView()
-                } else {
-                    print("no success")
-                }
-            })
+                })
+            } else {
+                AlerView.showAler(self, message: "Unable to load Student Locations.\nPlease try again.")
+            }
         }
     }
     
-    func loadingOverlay() -> UIAlertController {
-        let alert = UIAlertController(title: nil, message: "Please Wait...", preferredStyle: .Alert)
-        alert.view.tintColor = UIColor.blackColor()
-        
-        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(10, 5, 50, 50)) as UIActivityIndicatorView
-        loadingIndicator.hidesWhenStopped = true
-        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
-        loadingIndicator.startAnimating()
-        
-        alert.view.addSubview(loadingIndicator)
-        
-        return alert
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "postStudentLocation" {
+            let controller = segue.destinationViewController as! LocationFinderViewController
+            controller.newStudent = self.newStudent!
+        }
     }
     
-    func showInvalidURLAlert() {
-        let alert = UIAlertController(title: "Alert", message: "Invalid URL", preferredStyle: .Alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-        self.presentViewController(alert, animated: true, completion: nil)
+    func studentLocationPostedAlert() {
+        let message = "User \(Student.sharedInstance().firstName!) \(Student.sharedInstance().lastName!) has already\nPosted a Student Location. Do you\nwant to overwrite the location?"
+        let alert = UIAlertController(title: "Alert", message: message, preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "Overwrite", style: .Default, handler: { (alert: UIAlertAction!) in
+            self.newStudent = false
+            self.performSegueWithIdentifier("postStudentLocation", sender: self)
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: nil))
+        presentViewController(alert, animated: true, completion: nil)
     }
     
     func verifyURL(urlString: String) -> Bool {
@@ -109,7 +126,9 @@ extension ListTableViewController: UITableViewDelegate {
             if verifyURL(urlString) {
                 UIApplication.sharedApplication().openURL(NSURL(string: urlString)!)
             } else {
-                showInvalidURLAlert()
+                let alert = UIAlertController(title: "Alert", message: "Invalid URL", preferredStyle: .Alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                self.presentViewController(alert, animated: true, completion: nil)
             }
         }
         tableView.deselectRowAtIndexPath(indexPath, animated: true)

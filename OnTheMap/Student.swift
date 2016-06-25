@@ -16,10 +16,11 @@ class Student: NSObject {
     var mapString: String?
     var latitude: Float?
     var longitude: Float?
-    var accountKey: String?
     var registeredAccount: Bool?
     var objectID: String?
     var updatedAt: NSDate?
+    var userId: String?
+    var uniqueKey: String?
     
     var students = [StudentInformation]()
     

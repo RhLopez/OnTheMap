@@ -56,21 +56,32 @@ class LocationFinderViewController: UIViewController {
             Student.sharedInstance().mapString = locationTextView.text!
             Student.sharedInstance().mediaURL = linkTextView.text!
             if newStudent == true {
-                API.sharedInstance().postStudentLocation({ (success, errorString) in
-                    if success {
-                        dispatch_async(dispatch_get_main_queue(), { 
+                Parse.sharedInstance().postStudentLocation({ (success, errorString) in
+                    dispatch_async(dispatch_get_main_queue(), { 
+                        if success {
                             self.dismissViewControllerAnimated(true, completion: nil)
-                        })
-                    }
+                        } else {
+                            AlerView.showAler(self, message: "Unable to Post Student Location.\nPlease try again.")
+                        }
+                    })
                 })
             } else {
-                API.sharedInstance().updateStudentLocation({ (success, errorString) in
-                    if success {
-                        dispatch_async(dispatch_get_main_queue(), { 
+                Parse.sharedInstance().updateStudentLocation({ (success, errorString) in
+                    dispatch_async(dispatch_get_main_queue(), { 
+                        if success {
                             self.dismissViewControllerAnimated(true, completion: nil)
-                        })
-                    }
+                        } else {
+                            AlerView.showAler(self, message: "Unable to update location.\nPlease try again.")
+                        }
+                    })
                 })
+//                API.sharedInstance().updateStudentLocation({ (success, errorString) in
+//                    if success {
+//                        dispatch_async(dispatch_get_main_queue(), { 
+//                            self.dismissViewControllerAnimated(true, completion: nil)
+//                        })
+//                    }
+//                })
             }
         }
     }
@@ -88,8 +99,8 @@ class LocationFinderViewController: UIViewController {
                     let region = MKCoordinateRegionMakeWithDistance(coordinates, 250, 250)
                     self.mapView.setRegion(region, animated: true)
                     self.mapView.addAnnotation(annotation)
-                    Student.sharedInstance().longitude = Float(coordinates.longitude)
                     Student.sharedInstance().latitude = Float(coordinates.latitude)
+                    Student.sharedInstance().longitude = Float(coordinates.longitude)
                 }
             }
         }
