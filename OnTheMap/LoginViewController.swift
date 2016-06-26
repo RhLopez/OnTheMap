@@ -23,6 +23,7 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func loginButtonPressed(sender: AnyObject) {
+        // Check if user has entered email and password
         if emailTextField.hasText() && passwordTextField.hasText() {
             activityIndicator.startAnimating()
             Udacity.sharedInstance().logIn(emailTextField.text!, password: passwordTextField.text!, completionHandlerForLogIn: { (success, errorString) in
@@ -57,6 +58,7 @@ class LoginViewController: UIViewController {
         presentViewController(masterTabController, animated: true, completion: nil)
     }
     
+    // Configure appearance of login textfields
     func textFieldConfig(textField: UITextField) {
         let padding = UIView(frame: CGRectMake(0,0,15,textField.frame.height))
         textField.leftView = padding

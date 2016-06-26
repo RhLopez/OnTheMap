@@ -104,10 +104,13 @@ class LocationFinderViewController: UIViewController {
     }
     
     func geoCodeLocation(address: String) {
+        ActivityIndicatorOverlay.shared.showOverlay(self.mapView)
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(address) { (placemarks, error) in
             if (error != nil) {
-                print(error?.localizedDescription)
+                print(error)
+                ActivityIndicatorOverlay.shared.hideOverlayView()
+                AlerView.showAlert(self, message: "Unable to geocode location.")
             } else {
                 if let placemark = placemarks?.first {
                     let coordinates: CLLocationCoordinate2D = placemark.location!.coordinate
@@ -118,6 +121,7 @@ class LocationFinderViewController: UIViewController {
                     self.mapView.addAnnotation(annotation)
                     Student.sharedInstance().latitude = Float(coordinates.latitude)
                     Student.sharedInstance().longitude = Float(coordinates.longitude)
+                    ActivityIndicatorOverlay.shared.hideOverlayView()
                 }
             }
         }

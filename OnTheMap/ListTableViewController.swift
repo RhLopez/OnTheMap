@@ -25,6 +25,7 @@ class ListTableViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        // Fetch student locations if transitioning from LocationFinderVC
         if ((presentedViewController?.isKindOfClass(LocationFinderViewController)) != nil) {
             getStudentLocations()
         }
@@ -41,30 +42,30 @@ class ListTableViewController: UIViewController {
     @IBAction func logoutButtonPressed(sender: AnyObject) {
         ActivityIndicatorOverlay.shared.showOverlay(listTableView)
         Udacity.sharedInstance().logOut { (success, errorString) in
-            if success {
-                dispatch_async(dispatch_get_main_queue(), { 
+            dispatch_async(dispatch_get_main_queue(), {
+                if success {
                     self.dismissViewControllerAnimated(true, completion: nil)
-                })
-            } else {
-                AlerView.showAlert(self, message: "Unable to logout.\nPlease try again.")
-            }
+                } else {
+                    AlerView.showAlert(self, message: "Unable to logout.\nPlease try again.")
+                }
+            })
         }
     }
     
     @IBAction func postLocationButtonPressed(sender: AnyObject) {
         Parse.sharedInstance().queryStudentLocation { (success, locationPosted, errorString) in
-            if success {
-                dispatch_async(dispatch_get_main_queue(), {
+            dispatch_async(dispatch_get_main_queue(), {
+                if success {
                     if locationPosted == true {
                         self.studentLocationPostedAlert()
                     } else {
                         self.newPosting = true
                         self.performSegueWithIdentifier("postStudentLocation", sender: self)
                     }
-                })
-            } else {
-                AlerView.showAlert(self, message: "Unable to query Student Location.\nPlease try again.")
-            }
+                } else {
+                    AlerView.showAlert(self, message: "Unable to query Student Location.\nPlease try again.")
+                }
+            })
         }
     }
     
@@ -83,14 +84,14 @@ class ListTableViewController: UIViewController {
         Student.sharedInstance().students.removeAll()
         ActivityIndicatorOverlay.shared.showOverlay(listTableView)
         Parse.sharedInstance().getStudentLocations { (success, errorString) in
-            if success {
-                dispatch_async(dispatch_get_main_queue(), {
+            dispatch_async(dispatch_get_main_queue(), {
+                if success {
                     self.listTableView.reloadData()
                     ActivityIndicatorOverlay.shared.hideOverlayView()
-                })
-            } else {
-                AlerView.showAlert(self, message: "Unable to load Student Locations.\nPlease try again.")
-            }
+                } else {
+                    AlerView.showAlert(self, message: "Unable to load Student Locations.\nPlease try again.")
+                }
+            })
         }
     }
     

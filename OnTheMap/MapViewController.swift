@@ -25,6 +25,7 @@ class MapViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        // Fetch student locations if transitioning from LocationFinderVC
         if ((presentedViewController?.isKindOfClass(LocationFinderViewController)) != nil) {
             getStudentLocations()
         }
@@ -92,18 +93,18 @@ class MapViewController: UIViewController {
     
     @IBAction func postLocationButtonPressed(sender: AnyObject) {
         Parse.sharedInstance().queryStudentLocation { (success, locationPosted, errorString) in
-            if success {
-                dispatch_async(dispatch_get_main_queue(), {
+            dispatch_async(dispatch_get_main_queue(), { 
+                if success {
                     if locationPosted == true {
                         self.studentLocationPostedAlert()
                     } else {
                         self.newPosting = true
                         self.performSegueWithIdentifier("postStudentLocation", sender: self)
                     }
-                })
-            } else {
+                } else {
                 AlerView.showAlert(self, message: "Unable to query Student Location.\nPlease try again.")
-            }
+                }
+            })
         }
     }
     
