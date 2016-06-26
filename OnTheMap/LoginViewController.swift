@@ -34,16 +34,16 @@ class LoginViewController: UIViewController {
                         } else {
                             print(errorString!)
                             self.activityIndicator.stopAnimating()
-                            AlerView.showAler(self, message: "Unable To Retrieve User Information\nPlease Try Again.")
+                            AlerView.showAlert(self, message: "Unable To Retrieve User Information\nPlease Try Again.")
                         }
                     } else {
                         self.activityIndicator.stopAnimating()
-                        AlerView.showAler(self, message: "Invalid Email/Password")
+                        AlerView.showAlert(self, message: "Invalid Email/Password")
                     }
                 })
             })
         } else {
-            AlerView.showAler(self, message: "Email/Password Field Empty")
+            AlerView.showAlert(self, message: "Email/Password Field Empty")
         }
     }
     

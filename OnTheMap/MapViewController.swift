@@ -11,14 +11,14 @@ import MapKit
 
 class MapViewController: UIViewController {
     
-    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var mapView: MKMapView! 
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     var newPosting: Bool?
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadStudentLocations()
+        getStudentLocations()
         mapView.delegate = self
     }
     
@@ -26,12 +26,12 @@ class MapViewController: UIViewController {
         super.viewWillAppear(animated)
         
         if ((presentedViewController?.isKindOfClass(LocationFinderViewController)) != nil) {
-            Student.sharedInstance().students.removeAll()
-            loadStudentLocations()
+            getStudentLocations()
         }
     }
     
-    func loadStudentLocations() {
+    func getStudentLocations() {
+        Student.sharedInstance().students.removeAll()
         ActivityIndicatorOverlay.shared.showOverlay(mapView)
         Parse.sharedInstance().getStudentLocations { (success, errorString) in
             dispatch_async(dispatch_get_main_queue(), { 
@@ -40,18 +40,16 @@ class MapViewController: UIViewController {
                     ActivityIndicatorOverlay.shared.hideOverlayView()
                 } else {
                     ActivityIndicatorOverlay.shared.hideOverlayView()
-                    AlerView.showAler(self, message: "Unable to retrieve Student Location\nPlease try again.")
+                    AlerView.showAlert(self, message: "Unable to retrieve Student Location\nPlease try again.")
                 }
             })
         }
     }
     
     func mapSetup() {
-        
         mapView.removeAnnotations(mapView.annotations)
         
         var annotations = [MKPointAnnotation]()
-        
         
         for dictionary in Student.sharedInstance().students {
             
@@ -82,15 +80,14 @@ class MapViewController: UIViewController {
                     Student.sharedInstance().students.removeAll()
                     self.dismissViewControllerAnimated(true, completion: nil)
                 } else {
-                    AlerView.showAler(self, message: "Unable to logout./nPlease try again.")
+                    AlerView.showAlert(self, message: "Unable to logout./nPlease try again.")
                 }
             })
         }
     }
     
     @IBAction func refreshButtonPressed(sender: AnyObject) {
-        Student.sharedInstance().students.removeAll()
-        loadStudentLocations()
+        getStudentLocations()
     }
     
     @IBAction func postLocationButtonPressed(sender: AnyObject) {
@@ -105,7 +102,7 @@ class MapViewController: UIViewController {
                     }
                 })
             } else {
-                AlerView.showAler(self, message: "Unable to query Student Location.\nPlease try again.")
+                AlerView.showAlert(self, message: "Unable to query Student Location.\nPlease try again.")
             }
         }
     }
@@ -161,7 +158,7 @@ extension MapViewController: MKMapViewDelegate {
                 if verifyURL(url) {
                     UIApplication.sharedApplication().openURL(NSURL(string: url)!)
                 } else {
-                    AlerView.showAler(self, message: "Invalid URL")
+                    AlerView.showAlert(self, message: "Invalid URL")
                 }
             }
         }

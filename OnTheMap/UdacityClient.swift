@@ -15,7 +15,6 @@ class Udacity: NSObject {
     let session = NSURLSession.sharedSession()
     
     func taskForPostMethod(jsonBody: String, completionHandlerForPost: (data: AnyObject!, error: NSError?) -> Void) {
-        
         let request = NSMutableURLRequest(URL: udacityUrl(Methods.Session))
         request.HTTPMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")

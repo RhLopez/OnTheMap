@@ -21,6 +21,7 @@ extension Udacity {
         
         //Mark: Header
         static let CookeHeader = "X-XSRF-TOKEN"
+        static let ApplicationJson = "json/application"
     }
     
     struct Methods {

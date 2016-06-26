@@ -16,10 +16,18 @@ class ListTableViewController: UIViewController {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        listTableView.reloadData()
         
+        listTableView.reloadData()
         navigationController?.hidesBarsOnSwipe = true
         
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if ((presentedViewController?.isKindOfClass(LocationFinderViewController)) != nil) {
+            getStudentLocations()
+        }
     }
     
     override func prefersStatusBarHidden() -> Bool {
@@ -38,7 +46,7 @@ class ListTableViewController: UIViewController {
                     self.dismissViewControllerAnimated(true, completion: nil)
                 })
             } else {
-                AlerView.showAler(self, message: "Unable to logout.\nPlease try again.")
+                AlerView.showAlert(self, message: "Unable to logout.\nPlease try again.")
             }
         }
     }
@@ -55,30 +63,34 @@ class ListTableViewController: UIViewController {
                     }
                 })
             } else {
-                AlerView.showAler(self, message: "Unable to query Student Location.\nPlease try again.")
+                AlerView.showAlert(self, message: "Unable to query Student Location.\nPlease try again.")
             }
         }
     }
     
     @IBAction func refreshButtonPressed(sender: AnyObject) {
-        Student.sharedInstance().students.removeAll()
-        ActivityIndicatorOverlay.shared.showOverlay(listTableView)
-        Parse.sharedInstance().getStudentLocations { (success, errorString) in
-            if success {
-                dispatch_async(dispatch_get_main_queue(), { 
-                    self.listTableView.reloadData()
-                    ActivityIndicatorOverlay.shared.hideOverlayView()
-                })
-            } else {
-                AlerView.showAler(self, message: "Unable to load Student Locations.\nPlease try again.")
-            }
-        }
+        getStudentLocations()
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "postStudentLocation" {
             let controller = segue.destinationViewController as! LocationFinderViewController
             controller.newPosting = self.newPosting!
+        }
+    }
+    
+    func getStudentLocations() {
+        Student.sharedInstance().students.removeAll()
+        ActivityIndicatorOverlay.shared.showOverlay(listTableView)
+        Parse.sharedInstance().getStudentLocations { (success, errorString) in
+            if success {
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.listTableView.reloadData()
+                    ActivityIndicatorOverlay.shared.hideOverlayView()
+                })
+            } else {
+                AlerView.showAlert(self, message: "Unable to load Student Locations.\nPlease try again.")
+            }
         }
     }
     
@@ -126,9 +138,7 @@ extension ListTableViewController: UITableViewDelegate {
             if verifyURL(urlString) {
                 UIApplication.sharedApplication().openURL(NSURL(string: urlString)!)
             } else {
-                let alert = UIAlertController(title: "Alert", message: "Invalid URL", preferredStyle: .Alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                self.presentViewController(alert, animated: true, completion: nil)
+                AlerView.showAlert(self, message: "Invalid URL")
             }
         }
         tableView.deselectRowAtIndexPath(indexPath, animated: true)

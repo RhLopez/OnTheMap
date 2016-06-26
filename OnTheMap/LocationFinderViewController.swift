@@ -49,34 +49,58 @@ class LocationFinderViewController: UIViewController {
     
     @IBAction func informationPostingButtonPressed(sender: UIButton) {
         if sender.currentTitle == "Find on the Map" {
+            findLocationOnMap()
+        } else {
+            submitStudentLocation()
+        }
+    }
+    
+    func findLocationOnMap() {
+        if locationTextView.text.isEmpty || locationTextView.text == "Enter Your Location Here" {
+            AlerView.showAlert(self, message: "No location was entered.")
+        } else {
             enterLocationView.hidden = true
             submitInformationView.hidden = false
             geoCodeLocation(locationTextView.text!)
+        }
+    }
+    
+    func submitStudentLocation() {
+        if linkTextView.text.isEmpty || linkTextView.text == "Enter a Link to Share Here" {
+            AlerView.showAlert(self, message: "No link was entered.")
         } else {
             Student.sharedInstance().mapString = locationTextView.text!
             Student.sharedInstance().mediaURL = linkTextView.text!
             if newPosting == true {
-                Parse.sharedInstance().postStudentLocation({ (success, errorString) in
-                    dispatch_async(dispatch_get_main_queue(), { 
-                        if success {
-                            self.dismissViewControllerAnimated(true, completion: nil)
-                        } else {
-                            AlerView.showAler(self, message: "Unable to Post Student Location.\nPlease try again.")
-                        }
-                    })
-                })
+                postStudentLocation()
             } else {
-                Parse.sharedInstance().updateStudentLocation({ (success, errorString) in
-                    dispatch_async(dispatch_get_main_queue(), { 
-                        if success {
-                            self.dismissViewControllerAnimated(true, completion: nil)
-                        } else {
-                            AlerView.showAler(self, message: "Unable to update location.\nPlease try again.")
-                        }
-                    })
-                })
+                updateStudentLocation()
             }
         }
+    }
+    
+    func postStudentLocation() {
+        Parse.sharedInstance().postStudentLocation({ (success, errorString) in
+            dispatch_async(dispatch_get_main_queue(), {
+                if success {
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                } else {
+                    AlerView.showAlert(self, message: "Unable to Post Student Location.\nPlease try again.")
+                }
+            })
+        })
+    }
+    
+    func updateStudentLocation() {
+        Parse.sharedInstance().updateStudentLocation({ (success, errorString) in
+            dispatch_async(dispatch_get_main_queue(), {
+                if success {
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                } else {
+                    AlerView.showAlert(self, message: "Unable to update location.\nPlease try again.")
+                }
+            })
+        })
     }
     
     func geoCodeLocation(address: String) {

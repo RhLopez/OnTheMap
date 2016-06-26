@@ -21,7 +21,7 @@ class ActivityIndicatorOverlay {
     }
     
     func showOverlay(view: UIView!) {
-        overlayView = UIView(frame: UIScreen.mainScreen().bounds)
+        overlayView = UIView(frame: view.frame)
         overlayView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
         activityIndicator.center = overlayView.center

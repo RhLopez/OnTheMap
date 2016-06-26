@@ -15,7 +15,6 @@ extension Udacity {
     }
     
     func logIn(email: String, password: String, completionHandlerForLogIn: (success: Bool, errorString: String?) -> Void) {
-        
         let jsonBody = "{\"udacity\": {\"username\": \"\(email)\", \"password\": \"\(password)\"}}"
         
         self.getAccountData(jsonBody) { (success, errorString) in
@@ -34,21 +33,14 @@ extension Udacity {
     }
     
     func logOut(completionHandlerForLogOut: (success: Bool, errorString: String?) -> Void) {
-        
         taskForDeleteMethod { (data, error) in
             if let error = error {
                 print(error)
                 completionHandlerForLogOut(success: false, errorString: "Unable to Log Out (Error in Data)")
             } else {
-                self.getSessionDictionary(data, completionHandlerForSessionDict: { (success, dictionary, errorString) in
+                self.getSessionID(data, completionHandlerForSessionId: { (success, errorString) in
                     if success {
-                        self.getSessionId(dictionary!, completHandlerForSessiondId: { (success, errorString) in
-                            if success {
-                                completionHandlerForLogOut(success: true, errorString: nil)
-                            } else {
-                                completionHandlerForLogOut(success: false, errorString: errorString)
-                            }
-                        })
+                        completionHandlerForLogOut(success: true, errorString: nil)
                     } else {
                         completionHandlerForLogOut(success: false, errorString: errorString)
                     }
@@ -58,35 +50,16 @@ extension Udacity {
     }
     
     func getAccountData(jsonBody: String, completionHandlerForAccountData: (success: Bool, errorString: String?) -> Void) {
-        
         taskForPostMethod(jsonBody) { (data, error) in
             if let error = error {
                 print(error)
                 completionHandlerForAccountData(success: false, errorString: "Unable to Log In (Error in Data)")
             } else {
-                self.getAccountDictionary(data, completionHandlerForAccountDict: { (success, dictionary, errorString) in
+                self.getAccountDetails(data, completionHanderForAccountDetails: { (success, errorString) in
                     if success {
-                        self.getAccountStatus(dictionary!, completionHandlerForAccount: { (success, errorString) in
+                        self.getSessionID(data, completionHandlerForSessionId: { (success, errorString) in
                             if success {
-                                self.getUserId(dictionary!, completionHandlerForUserId: { (success, errorString) in
-                                    if success {
-                                        self.getSessionDictionary(data, completionHandlerForSessionDict: { (success, dictionary, errorString) in
-                                            if success {
-                                                self.getSessionId(dictionary!, completHandlerForSessiondId: { (success, errorString) in
-                                                    if success {
-                                                        completionHandlerForAccountData(success: true, errorString: nil)
-                                                    } else {
-                                                        completionHandlerForAccountData(success: false, errorString: errorString)
-                                                    }
-                                                })
-                                            } else {
-                                                completionHandlerForAccountData(success: false, errorString: errorString)
-                                            }
-                                        })
-                                    } else {
-                                        completionHandlerForAccountData(success: false, errorString: errorString)
-                                    }
-                                })
+                                completionHandlerForAccountData(success: true, errorString: nil)
                             } else {
                                 completionHandlerForAccountData(success: false, errorString: errorString)
                             }
@@ -100,7 +73,6 @@ extension Udacity {
     }
     
     func getUserData(completionHandlerForUserData: (success: Bool, errorString: String?) -> Void) {
-        
         taskForGetMethod { (data, error) in
             if let error = error {
                 print(error)
@@ -116,50 +88,51 @@ extension Udacity {
             }
         }
     }
-    
-    func getAccountDictionary(data: AnyObject, completionHandlerForAccountDict: (success: Bool, dictionary: [String:AnyObject]?, errorString: String?) -> Void) {
-        if let account = data["account"] as? [String:AnyObject] {
-            completionHandlerForAccountDict(success: true, dictionary: account, errorString: nil)
-        } else {
-            completionHandlerForAccountDict(success: false, dictionary: nil, errorString: "Login Failed (No Account Data Returned)")
+
+    func getAccountDetails(data: AnyObject, completionHanderForAccountDetails: (success: Bool, errorString: String?) -> Void) {
+        func reportError(error: String) {
+            completionHanderForAccountDetails(success: false, errorString: error)
         }
+        
+        guard let account = data["account"] as? [String:AnyObject] else {
+            reportError("No account data returned in: \(data)")
+            return
+        }
+        
+        guard let registered = account["registered"] as? Bool where registered == true else {
+            reportError("Account is not registered")
+            return
+        }
+        
+        guard let userId = account["key"] as? String else {
+            reportError("No Student Id returned")
+            return
+        }
+        
+        Student.sharedInstance().registeredAccount = registered
+        Student.sharedInstance().userId = userId
+        
+        completionHanderForAccountDetails(success: true, errorString: nil)
     }
     
-    func getAccountStatus(dictionary: [String:AnyObject], completionHandlerForAccount: (success: Bool, errorString: String?) -> Void) {
-        if let registered = dictionary["registered"] as? Bool {
-            if registered == true {
-                completionHandlerForAccount(success: true, errorString: nil)
-            } else {
-                completionHandlerForAccount(success: false, errorString: "Account is not registered")
-            }
+    func getSessionID(data: AnyObject, completionHandlerForSessionId: (success: Bool, errorString: String?) -> Void) {
+        func reportError(error: String) {
+            completionHandlerForSessionId(success: false, errorString: error)
         }
-    }
-    
-    func getUserId(dictionary: [String:AnyObject], completionHandlerForUserId: (success: Bool, errorString: String?) -> Void) {
-        if let studentId = dictionary["key"] as? String {
-            
-            Student.sharedInstance().userId = studentId
-            completionHandlerForUserId(success: true, errorString: nil)
-        } else {
-            completionHandlerForUserId(success: false, errorString: "No Student Id returned")
+        
+        guard let session = data["session"] as? [String:AnyObject] else {
+            reportError("No session data returned in: \(data)")
+            return
         }
-    }
-    
-    func getSessionDictionary(data: AnyObject, completionHandlerForSessionDict: (success: Bool, dictionary: [String:AnyObject]?, errorString: String?) -> Void) {
-        if let session = data["session"] as? [String:AnyObject] {
-            completionHandlerForSessionDict(success: true, dictionary: session, errorString: nil)
-        } else {
-            completionHandlerForSessionDict(success: false, dictionary: nil, errorString: "Login Failed (No Session Data Returned)")
+        
+        guard let sessionId = session["id"] as? String else {
+            reportError("No session id returned in: \(data)")
+            return
         }
-    }
-    
-    func getSessionId(dictionary: [String:AnyObject], completHandlerForSessiondId: (success: Bool, errorString: String?) -> Void) {
-        if let sessionId = dictionary["id"] as? String {
-            self.sessionId = sessionId
-            completHandlerForSessiondId(success: true, errorString: nil)
-        } else {
-            completHandlerForSessiondId(success: false, errorString: "No Session Id returned")
-        }
+        
+        self.sessionId = sessionId
+        
+        completionHandlerForSessionId(success: true, errorString: nil)
     }
     
     func processUserData(data: AnyObject, completionHandlerForProcessUser: (success: Bool, errorString: String?) -> Void) {
