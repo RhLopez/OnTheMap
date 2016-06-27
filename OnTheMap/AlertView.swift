@@ -10,8 +10,8 @@ import UIKit
 
 class AlerView: NSObject {
     
-    class func showAlert(view: UIViewController, message: String) {
-        let alert = UIAlertController(title: "Alert", message: message, preferredStyle: .Alert)
+    class func showAlert(view: UIViewController, title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         dispatch_async(dispatch_get_main_queue()) { 
             view.presentViewController(alert, animated: true, completion: nil)

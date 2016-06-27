@@ -23,33 +23,33 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func loginButtonPressed(sender: AnyObject) {
-        // Check if user has entered email and password
-        if emailTextField.hasText() && passwordTextField.hasText() {
-            activityIndicator.startAnimating()
-            Udacity.sharedInstance().logIn(emailTextField.text!, password: passwordTextField.text!, completionHandlerForLogIn: { (success, errorString) in
-                dispatch_async(dispatch_get_main_queue(), { 
-                    if success {
+        // Check internet connection
+        if Reachability.isConnectedToNetwork() == true {
+            // Check if user has entered email and password
+            if emailTextField.hasText() && passwordTextField.hasText() {
+                activityIndicator.startAnimating()
+                Udacity.sharedInstance.logIn(emailTextField.text!, password: passwordTextField.text!, completionHandlerForLogIn: { (success, errorString) in
+                    dispatch_async(dispatch_get_main_queue(), {
                         if success {
                             self.activityIndicator.stopAnimating()
                             self.completeLogin()
                         } else {
                             print(errorString!)
                             self.activityIndicator.stopAnimating()
-                            AlerView.showAlert(self, message: "Unable To Retrieve User Information\nPlease Try Again.")
+                            AlerView.showAlert(self, title: "Login Failed", message: "\(errorString!)\nPlease try again.")
                         }
-                    } else {
-                        self.activityIndicator.stopAnimating()
-                        AlerView.showAlert(self, message: "Invalid Email/Password")
-                    }
+                    })
                 })
-            })
+            } else {
+                AlerView.showAlert(self, title: "Attention", message: "Email/Password Field Empty")
+            }
         } else {
-            AlerView.showAlert(self, message: "Email/Password Field Empty")
+            AlerView.showAlert(self, title: "No Internet Connection", message: "Make Sure your device is connected to the internet.")
         }
     }
     
     @IBAction func signUpButtonPressed(sender: AnyObject) {
-        UIApplication.sharedApplication().openURL(Udacity.sharedInstance().signUpUrl())
+        UIApplication.sharedApplication().openURL(Udacity.sharedInstance.signUpUrl())
     }
     
     

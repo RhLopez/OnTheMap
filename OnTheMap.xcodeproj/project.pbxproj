@@ -14,6 +14,7 @@
 		DD13E6EB1D1B1F2600E686E9 /* ParseConvinience.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD13E6EA1D1B1F2600E686E9 /* ParseConvinience.swift */; };
 		DD352E6C1D1615B7004CE258 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD352E6B1D1615B7004CE258 /* AlertView.swift */; };
 		DD39B71D1D0BCA8D00659187 /* LocationFinderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD39B71C1D0BCA8D00659187 /* LocationFinderViewController.swift */; };
+		DD4809281D20E09900C552D0 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4809271D20E09900C552D0 /* Reachability.swift */; };
 		DD4D43E51CFCD4EE00FB03D4 /* Student.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4D43E41CFCD4EE00FB03D4 /* Student.swift */; };
 		DD6588591D15378700682A58 /* ActivityIndicatorOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6588581D15378700682A58 /* ActivityIndicatorOverlay.swift */; };
 		DDC8674F1D02821500238CB1 /* ListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC8674E1D02821500238CB1 /* ListTableViewController.swift */; };
@@ -55,6 +56,7 @@
 		DD13E6EA1D1B1F2600E686E9 /* ParseConvinience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseConvinience.swift; sourceTree = "<group>"; };
 		DD352E6B1D1615B7004CE258 /* AlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		DD39B71C1D0BCA8D00659187 /* LocationFinderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationFinderViewController.swift; sourceTree = "<group>"; };
+		DD4809271D20E09900C552D0 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		DD4D43E41CFCD4EE00FB03D4 /* Student.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Student.swift; sourceTree = "<group>"; };
 		DD6588581D15378700682A58 /* ActivityIndicatorOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorOverlay.swift; sourceTree = "<group>"; };
 		DDC8674E1D02821500238CB1 /* ListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListTableViewController.swift; sourceTree = "<group>"; };
@@ -112,6 +114,17 @@
 			name = Parse;
 			sourceTree = "<group>";
 		};
+		DD4809291D20E0C400C552D0 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				DD4809271D20E09900C552D0 /* Reachability.swift */,
+				DD6588581D15378700682A58 /* ActivityIndicatorOverlay.swift */,
+				DD352E6B1D1615B7004CE258 /* AlertView.swift */,
+			);
+			name = Utility;
+			path = OnTheMap;
+			sourceTree = "<group>";
+		};
 		DD4D43E31CFCBCBF00FB03D4 /* API */ = {
 			isa = PBXGroup;
 			children = (
@@ -161,6 +174,7 @@
 				DD4D43E61CFCE7F800FB03D4 /* Model */,
 				DD4D43E31CFCBCBF00FB03D4 /* API */,
 				DDDD3B001CFE8D170022DF9C /* ViewController */,
+				DD4809291D20E0C400C552D0 /* Utility */,
 				DDF517EA1CF9F87200432297 /* OnTheMap */,
 				DDF517FF1CF9F87200432297 /* OnTheMapTests */,
 				DDF5180A1CF9F87200432297 /* OnTheMapUITests */,
@@ -181,8 +195,6 @@
 		DDF517EA1CF9F87200432297 /* OnTheMap */ = {
 			isa = PBXGroup;
 			children = (
-				DD6588581D15378700682A58 /* ActivityIndicatorOverlay.swift */,
-				DD352E6B1D1615B7004CE258 /* AlertView.swift */,
 				DDF517EB1CF9F87200432297 /* AppDelegate.swift */,
 				DDF517EF1CF9F87200432297 /* Main.storyboard */,
 				DDF517F21CF9F87200432297 /* Assets.xcassets */,
@@ -347,6 +359,7 @@
 				DDEEF2D41D1A3A21007039EC /* UdacityConstants.swift in Sources */,
 				DDF517EC1CF9F87200432297 /* AppDelegate.swift in Sources */,
 				DD0335FA1CFC0D2A002F52B2 /* StudentInformation.swift in Sources */,
+				DD4809281D20E09900C552D0 /* Reachability.swift in Sources */,
 				DD39B71D1D0BCA8D00659187 /* LocationFinderViewController.swift in Sources */,
 				DD13E6EB1D1B1F2600E686E9 /* ParseConvinience.swift in Sources */,
 				DDEEF2D71D1A4DAF007039EC /* UdacityClient.swift in Sources */,

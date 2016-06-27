@@ -53,7 +53,7 @@ extension Udacity {
         taskForPostMethod(jsonBody) { (data, error) in
             if let error = error {
                 print(error)
-                completionHandlerForAccountData(success: false, errorString: "Unable to Log In (Error in Data)")
+                completionHandlerForAccountData(success: false, errorString: error.localizedDescription)
             } else {
                 self.getAccountDetails(data, completionHanderForAccountDetails: { (success, errorString) in
                     if success {
@@ -109,8 +109,8 @@ extension Udacity {
             return
         }
         
-        Student.sharedInstance().registeredAccount = registered
-        Student.sharedInstance().userId = userId
+        Student.sharedInstance.registeredAccount = registered
+        Student.sharedInstance.userId = userId
         
         completionHanderForAccountDetails(success: true, errorString: nil)
     }
@@ -155,8 +155,8 @@ extension Udacity {
             return
         }
         
-        Student.sharedInstance().firstName = firstName
-        Student.sharedInstance().lastName = lastName
+        Student.sharedInstance.firstName = firstName
+        Student.sharedInstance.lastName = lastName
         
         completionHandlerForProcessUser(success: true, errorString: nil)
     }

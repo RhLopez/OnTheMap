@@ -10,15 +10,10 @@ import UIKit
 
 class ActivityIndicatorOverlay {
     
+    static let sharedInstance = ActivityIndicatorOverlay()
+    
     var overlayView = UIView()
     var activityIndicator = UIActivityIndicatorView()
-    
-    class var shared: ActivityIndicatorOverlay {
-        struct Singleton {
-            static let instance: ActivityIndicatorOverlay = ActivityIndicatorOverlay()
-        }
-        return Singleton.instance
-    }
     
     func showOverlay(view: UIView!) {
         overlayView = UIView(frame: UIScreen.mainScreen().bounds)

@@ -10,6 +10,8 @@ import Foundation
 
 class Udacity: NSObject {
     
+    static let sharedInstance = Udacity()
+    
     var sessionId: String?
     
     let session = NSURLSession.sharedSession()
@@ -34,8 +36,25 @@ class Udacity: NSObject {
                 return
             }
             
-            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
-                reportError("The request did not return a status code 2xx")
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode else {
+                reportError("No status code was returned")
+                return
+            }
+            
+            if statusCode < 200 || statusCode > 299 {
+                print(statusCode)
+                switch statusCode {
+                case 400:
+                    reportError("Bad Request")
+                case 403:
+                    reportError("Invalid Email/Password")
+                case 500:
+                    reportError("Internal Server Error")
+                case 503:
+                    reportError("Service Unavailable")
+                default:
+                    reportError("Unable To Log In")
+                }
                 return
             }
             
@@ -54,7 +73,7 @@ class Udacity: NSObject {
     
     func taskForGetMethod(completionHandlerForGet: (data: AnyObject!, error: NSError?) -> Void) {
         
-        let pathExtension = Methods.Users + "/\(Student.sharedInstance().userId!)"
+        let pathExtension = Methods.Users + "/\(Student.sharedInstance.userId!)"
         let request = NSMutableURLRequest(URL: udacityUrl(pathExtension))
         
         let task = session.dataTaskWithRequest(request) { (data, response, error) in
@@ -155,12 +174,5 @@ class Udacity: NSObject {
         components.path = Udacity.Constants.ApidPath + (pathExtension ?? "")
         
         return components.URL!
-    }
-    
-    class func sharedInstance() -> Udacity {
-        struct Singleton {
-            static var sharedInstance = Udacity()
-        }
-        return Singleton.sharedInstance
     }
 }

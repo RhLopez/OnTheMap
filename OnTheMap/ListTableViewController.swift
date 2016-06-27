@@ -40,20 +40,20 @@ class ListTableViewController: UIViewController {
     }
     
     @IBAction func logoutButtonPressed(sender: AnyObject) {
-        ActivityIndicatorOverlay.shared.showOverlay(listTableView)
-        Udacity.sharedInstance().logOut { (success, errorString) in
+        ActivityIndicatorOverlay.sharedInstance.showOverlay(listTableView)
+        Udacity.sharedInstance.logOut { (success, errorString) in
             dispatch_async(dispatch_get_main_queue(), {
                 if success {
                     self.dismissViewControllerAnimated(true, completion: nil)
                 } else {
-                    AlerView.showAlert(self, message: "Unable to logout.\nPlease try again.")
+                    AlerView.showAlert(self, title: "Unable To Logout", message: "\(errorString!)\nPlease try again.")
                 }
             })
         }
     }
     
     @IBAction func postLocationButtonPressed(sender: AnyObject) {
-        Parse.sharedInstance().queryStudentLocation { (success, locationPosted, errorString) in
+        Parse.sharedInstance.queryStudentLocation { (success, locationPosted, errorString) in
             dispatch_async(dispatch_get_main_queue(), {
                 if success {
                     if locationPosted == true {
@@ -63,7 +63,7 @@ class ListTableViewController: UIViewController {
                         self.performSegueWithIdentifier("postStudentLocation", sender: self)
                     }
                 } else {
-                    AlerView.showAlert(self, message: "Unable to query Student Location.\nPlease try again.")
+                    AlerView.showAlert(self, title: "Unable To Query Location", message: "\(errorString!)\nPlease try again.")
                 }
             })
         }
@@ -81,22 +81,22 @@ class ListTableViewController: UIViewController {
     }
     
     func getStudentLocations() {
-        Student.sharedInstance().students.removeAll()
-        ActivityIndicatorOverlay.shared.showOverlay(listTableView)
-        Parse.sharedInstance().getStudentLocations { (success, errorString) in
+        Student.sharedInstance.students.removeAll()
+        ActivityIndicatorOverlay.sharedInstance.showOverlay(listTableView)
+        Parse.sharedInstance.getStudentLocations { (success, errorString) in
             dispatch_async(dispatch_get_main_queue(), {
                 if success {
                     self.listTableView.reloadData()
-                    ActivityIndicatorOverlay.shared.hideOverlayView()
+                    ActivityIndicatorOverlay.sharedInstance.hideOverlayView()
                 } else {
-                    AlerView.showAlert(self, message: "Unable to load Student Locations.\nPlease try again.")
+                    AlerView.showAlert(self, title: "Unable To Load Student Locations", message: "\(errorString!)\nPlease try again.")
                 }
             })
         }
     }
     
     func studentLocationPostedAlert() {
-        let message = "User \(Student.sharedInstance().firstName!) \(Student.sharedInstance().lastName!) has already\nPosted a Student Location. Do you\nwant to overwrite the location?"
+        let message = "User \(Student.sharedInstance.firstName!) \(Student.sharedInstance.lastName!) has already\nPosted a Student Location. Do you\nwant to overwrite the location?"
         let alert = UIAlertController(title: "Alert", message: message, preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "Overwrite", style: .Default, handler: { (alert: UIAlertAction!) in
             self.newPosting = false
@@ -117,12 +117,12 @@ class ListTableViewController: UIViewController {
 
 extension ListTableViewController: UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       return Student.sharedInstance().students.count
+       return Student.sharedInstance.students.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("itemCell") as! ListCustomCell
-        let student = Student.sharedInstance().students[indexPath.row]
+        let student = Student.sharedInstance.students[indexPath.row]
         
         cell.cellImage.image = UIImage(named: "pin")
         cell.nameLabel.text = student.firstName! + " " + student.lastName!
@@ -134,12 +134,12 @@ extension ListTableViewController: UITableViewDataSource {
 
 extension ListTableViewController: UITableViewDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let student = Student.sharedInstance().students[indexPath.row]
+        let student = Student.sharedInstance.students[indexPath.row]
         if let urlString = student.mediaURL {
             if verifyURL(urlString) {
                 UIApplication.sharedApplication().openURL(NSURL(string: urlString)!)
             } else {
-                AlerView.showAlert(self, message: "Invalid URL")
+                AlerView.showAlert(self, title: "Alert", message: "Invalid URL")
             }
         }
         tableView.deselectRowAtIndexPath(indexPath, animated: true)

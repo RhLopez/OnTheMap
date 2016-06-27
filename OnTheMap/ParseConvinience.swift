@@ -22,7 +22,7 @@ extension Parse {
                 completionHandlerForGetLocations(success: false, errorString: "Unable to get Student Locations")
             } else {
                 if let results = results[JSONResponseKeys.Results] as? [[String:AnyObject]] {
-                    Student.sharedInstance().students = StudentInformation.studentsFromResults(results)
+                    Student.sharedInstance.students = StudentInformation.studentsFromResults(results)
                     completionHandlerForGetLocations(success: true, errorString: nil)
                 } else {
                     completionHandlerForGetLocations(success: false, errorString: "No value for key 'results' in: \(results)")
@@ -32,7 +32,7 @@ extension Parse {
     }
     
     func queryStudentLocation(completionHandlerQuery: (success: Bool, locationPosted: Bool?, errorString: String?) -> Void) {
-        let queryString = "{\"\(ParameterKeys.UniqueKey)\":\"\(Student.sharedInstance().userId!)\"}"
+        let queryString = "{\"\(ParameterKeys.UniqueKey)\":\"\(Student.sharedInstance.userId!)\"}"
         let parameters = [ParameterKeys.Where: queryString]
         
         taskForGetMethod(nil, parameters: parameters) { (results, error) in
@@ -45,7 +45,7 @@ extension Parse {
                         let dataDict = results.first!
                         self.getUniqueKey(dataDict, completionHandlerForUniqueKey: { (success, uniqueKey, errorString) in
                             if success {
-                                if Student.sharedInstance().userId == uniqueKey {
+                                if Student.sharedInstance.userId == uniqueKey {
                                     self.getObjectId(dataDict, completionHandlerForObjectId: { (success, errorString) in
                                         if success {
                                             self.getUpdatedTime(dataDict, fromQuery: true, completionHandlerForUpdatedTime: { (success, updatedTime, errorString) in
@@ -75,7 +75,7 @@ extension Parse {
     }
     
     func postStudentLocation(completionHandlerForLocationPost: (success: Bool, errorString: String?) -> Void) {
-        let student = Student.sharedInstance()
+        let student = Student.sharedInstance
         let parameters = [String:AnyObject]()
         let jsonBody = "{\"uniqueKey\": \"\(student.userId!)\", \"firstName\": \"\(student.firstName!)\", \"lastName\": \"\(student.lastName!)\",\"mapString\": \"\(student.mapString!)\", \"mediaURL\": \"\(student.mediaURL!)\",\"latitude\": \(student.latitude!), \"longitude\": \(student.longitude!)}"
         
@@ -97,7 +97,7 @@ extension Parse {
     
     func updateStudentLocation(completionHandlerForUpdateLocation: (success: Bool, errorString: String?) -> Void) {
         let parameters = [String:AnyObject]()
-        let student = Student.sharedInstance()
+        let student = Student.sharedInstance
         let pathExtension = "/\(student.objectID!)"
         let jsonBody = "{\"uniqueKey\": \"\(student.userId!)\", \"firstName\": \"\(student.firstName!)\", \"lastName\": \"\(student.lastName!)\",\"mapString\": \"\(student.mapString!)\", \"mediaURL\": \"\(student.mediaURL!)\",\"latitude\": \(student.latitude!), \"longitude\": \(student.longitude!)}"
         
@@ -133,7 +133,7 @@ extension Parse {
     
     func getObjectId(results: AnyObject, completionHandlerForObjectId: (success: Bool, errorString: String?) -> Void) {
         if let objectId = results["objectId"] as? String {
-            Student.sharedInstance().objectID = objectId
+            Student.sharedInstance.objectID = objectId
             completionHandlerForObjectId(success: true, errorString: nil)
         } else {
             completionHandlerForObjectId(success: false, errorString: "No value for key 'objectId' in: \(results)")
@@ -143,7 +143,7 @@ extension Parse {
     func getUpdatedTime(results: AnyObject, fromQuery: Bool, completionHandlerForUpdatedTime: (success: Bool, updatedTime: String?, errorString: String?) -> Void) {
         if let updatedAt = results["updatedAt"] as? String {
             if fromQuery {
-                Student.sharedInstance().updatedAt = formatDate(updatedAt)
+                Student.sharedInstance.updatedAt = formatDate(updatedAt)
             }
             completionHandlerForUpdatedTime(success: true, updatedTime: updatedAt, errorString: nil)
         } else {
@@ -152,7 +152,7 @@ extension Parse {
     }
     
     func compareTime(updatedTime: String, completionHandlerForCompareTime: (updated: Bool, detailString: String?) -> Void) {
-        if Student.sharedInstance().updatedAt!.compare(formatDate(updatedTime)) == NSComparisonResult.OrderedAscending {
+        if Student.sharedInstance.updatedAt!.compare(formatDate(updatedTime)) == NSComparisonResult.OrderedAscending {
             completionHandlerForCompareTime(updated: true, detailString: nil)
         } else {
             completionHandlerForCompareTime(updated: false, detailString: "Location update was not successful.")

@@ -10,6 +10,8 @@ import Foundation
 
 class Parse {
     
+    static let sharedInstance = Parse()
+    
     let session = NSURLSession.sharedSession()
     
     func taskForGetMethod(pathExtension: String?, parameters: [String:AnyObject], completionHandlerForGetMethod: (results: AnyObject!, error: NSError?) -> Void) {
@@ -147,12 +149,5 @@ class Parse {
         }
         
         return components.URL!
-    }
-    
-    class func sharedInstance() -> Parse {
-        struct Singleton {
-            static var sharedInstance = Parse()
-        }
-        return Singleton.sharedInstance
     }
 }

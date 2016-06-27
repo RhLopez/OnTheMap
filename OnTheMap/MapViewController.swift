@@ -32,16 +32,16 @@ class MapViewController: UIViewController {
     }
     
     func getStudentLocations() {
-        Student.sharedInstance().students.removeAll()
-        ActivityIndicatorOverlay.shared.showOverlay(mapView)
-        Parse.sharedInstance().getStudentLocations { (success, errorString) in
+        Student.sharedInstance.students.removeAll()
+        ActivityIndicatorOverlay.sharedInstance.showOverlay(mapView)
+        Parse.sharedInstance.getStudentLocations { (success, errorString) in
             dispatch_async(dispatch_get_main_queue(), { 
                 if success {
                     self.mapSetup()
-                    ActivityIndicatorOverlay.shared.hideOverlayView()
+                    ActivityIndicatorOverlay.sharedInstance.hideOverlayView()
                 } else {
-                    ActivityIndicatorOverlay.shared.hideOverlayView()
-                    AlerView.showAlert(self, message: "Unable to retrieve Student Location\nPlease try again.")
+                    ActivityIndicatorOverlay.sharedInstance.hideOverlayView()
+                    AlerView.showAlert(self, title: "Unable to get Student Locations", message: "\(errorString!)\nPlease try again.")
                 }
             })
         }
@@ -52,7 +52,7 @@ class MapViewController: UIViewController {
         
         var annotations = [MKPointAnnotation]()
         
-        for dictionary in Student.sharedInstance().students {
+        for dictionary in Student.sharedInstance.students {
             
             let latitude = CLLocationDegrees(Double(dictionary.latitude!))
             let longitutde = CLLocationDegrees(Double(dictionary.longitude!))
@@ -70,18 +70,18 @@ class MapViewController: UIViewController {
             annotations.append(annotation)
         }
         
-        self.mapView.addAnnotations(annotations)
+        mapView.addAnnotations(annotations)
     }
     
     @IBAction func logoutButtonPressed(sender: AnyObject) {
-        ActivityIndicatorOverlay.shared.showOverlay(mapView)
-        Udacity.sharedInstance().logOut { (success, errorString) in
+        ActivityIndicatorOverlay.sharedInstance.showOverlay(mapView)
+        Udacity.sharedInstance.logOut { (success, errorString) in
             dispatch_async(dispatch_get_main_queue(), { 
                 if success {
-                    Student.sharedInstance().students.removeAll()
+                    Student.sharedInstance.students.removeAll()
                     self.dismissViewControllerAnimated(true, completion: nil)
                 } else {
-                    AlerView.showAlert(self, message: "Unable to logout./nPlease try again.")
+                    AlerView.showAlert(self, title: "Unable to logout", message: "Unable to logout./nPlease try again.")
                 }
             })
         }
@@ -92,7 +92,7 @@ class MapViewController: UIViewController {
     }
     
     @IBAction func postLocationButtonPressed(sender: AnyObject) {
-        Parse.sharedInstance().queryStudentLocation { (success, locationPosted, errorString) in
+        Parse.sharedInstance.queryStudentLocation { (success, locationPosted, errorString) in
             dispatch_async(dispatch_get_main_queue(), { 
                 if success {
                     if locationPosted == true {
@@ -102,14 +102,14 @@ class MapViewController: UIViewController {
                         self.performSegueWithIdentifier("postStudentLocation", sender: self)
                     }
                 } else {
-                AlerView.showAlert(self, message: "Unable to query Student Location.\nPlease try again.")
+                AlerView.showAlert(self, title: "Unable to query Student Location", message: "\(errorString!)nPlease try again.")
                 }
             })
         }
     }
     
     func studentLocationPostedAlert() {
-        let message = "User \(Student.sharedInstance().firstName!) \(Student.sharedInstance().lastName!) has already\nPosted a Student Location. Do you\nwant to overwrite the location?"
+        let message = "User \(Student.sharedInstance.firstName!) \(Student.sharedInstance.lastName!) has already\nPosted a Student Location. Do you\nwant to overwrite the location?"
         let alert = UIAlertController(title: "Alert", message: message, preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "Overwrite", style: .Default, handler: { (alert: UIAlertAction!) in
             self.newPosting = false
@@ -159,7 +159,7 @@ extension MapViewController: MKMapViewDelegate {
                 if verifyURL(url) {
                     UIApplication.sharedApplication().openURL(NSURL(string: url)!)
                 } else {
-                    AlerView.showAlert(self, message: "Invalid URL")
+                    AlerView.showAlert(self, title: "Alert", message: "Invalid URL")
                 }
             }
         }

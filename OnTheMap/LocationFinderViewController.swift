@@ -57,20 +57,18 @@ class LocationFinderViewController: UIViewController {
     
     func findLocationOnMap() {
         if locationTextView.text.isEmpty || locationTextView.text == "Enter Your Location Here" {
-            AlerView.showAlert(self, message: "No location was entered.")
+            AlerView.showAlert(self, title: "Location Empty", message: "No location was entered.")
         } else {
-            enterLocationView.hidden = true
-            submitInformationView.hidden = false
             geoCodeLocation(locationTextView.text!)
         }
     }
     
     func submitStudentLocation() {
         if linkTextView.text.isEmpty || linkTextView.text == "Enter a Link to Share Here" {
-            AlerView.showAlert(self, message: "No link was entered.")
+            AlerView.showAlert(self, title: "Link Empty", message: "No link was entered.")
         } else {
-            Student.sharedInstance().mapString = locationTextView.text!
-            Student.sharedInstance().mediaURL = linkTextView.text!
+            Student.sharedInstance.mapString = locationTextView.text!
+            Student.sharedInstance.mediaURL = linkTextView.text!
             if newPosting == true {
                 postStudentLocation()
             } else {
@@ -80,38 +78,40 @@ class LocationFinderViewController: UIViewController {
     }
     
     func postStudentLocation() {
-        Parse.sharedInstance().postStudentLocation({ (success, errorString) in
+        Parse.sharedInstance.postStudentLocation({ (success, errorString) in
             dispatch_async(dispatch_get_main_queue(), {
                 if success {
                     self.dismissViewControllerAnimated(true, completion: nil)
                 } else {
-                    AlerView.showAlert(self, message: "Unable to Post Student Location.\nPlease try again.")
+                    AlerView.showAlert(self, title: "Unable To Post Student Location", message: "\(errorString!)\nPlease try again.")
                 }
             })
         })
     }
     
     func updateStudentLocation() {
-        Parse.sharedInstance().updateStudentLocation({ (success, errorString) in
+        Parse.sharedInstance.updateStudentLocation({ (success, errorString) in
             dispatch_async(dispatch_get_main_queue(), {
                 if success {
                     self.dismissViewControllerAnimated(true, completion: nil)
                 } else {
-                    AlerView.showAlert(self, message: "Unable to update location.\nPlease try again.")
+                    AlerView.showAlert(self, title: "Unable To Update Student Location", message: "\(errorString!)\nPlease try again.")
                 }
             })
         })
     }
     
     func geoCodeLocation(address: String) {
-        ActivityIndicatorOverlay.shared.showOverlay(self.mapView)
+        ActivityIndicatorOverlay.sharedInstance.showOverlay(self.mapView)
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(address) { (placemarks, error) in
             if (error != nil) {
                 print(error)
-                ActivityIndicatorOverlay.shared.hideOverlayView()
-                AlerView.showAlert(self, message: "Unable to geocode location.")
+                ActivityIndicatorOverlay.sharedInstance.hideOverlayView()
+                AlerView.showAlert(self, title: "Unable To Find Location", message: "Please try again")
             } else {
+                self.enterLocationView.hidden = true
+                self.submitInformationView.hidden = false
                 if let placemark = placemarks?.first {
                     let coordinates: CLLocationCoordinate2D = placemark.location!.coordinate
                     let annotation = MKPointAnnotation()
@@ -119,9 +119,9 @@ class LocationFinderViewController: UIViewController {
                     let region = MKCoordinateRegionMakeWithDistance(coordinates, 250, 250)
                     self.mapView.setRegion(region, animated: true)
                     self.mapView.addAnnotation(annotation)
-                    Student.sharedInstance().latitude = Float(coordinates.latitude)
-                    Student.sharedInstance().longitude = Float(coordinates.longitude)
-                    ActivityIndicatorOverlay.shared.hideOverlayView()
+                    Student.sharedInstance.latitude = Float(coordinates.latitude)
+                    Student.sharedInstance.longitude = Float(coordinates.longitude)
+                    ActivityIndicatorOverlay.sharedInstance.hideOverlayView()
                 }
             }
         }

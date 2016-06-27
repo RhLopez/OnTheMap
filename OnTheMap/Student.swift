@@ -10,6 +10,8 @@ import Foundation
 
 class Student: NSObject {
     
+    static let sharedInstance = Student()
+    
     var firstName: String?
     var lastName: String?
     var mediaURL: String?
@@ -23,11 +25,4 @@ class Student: NSObject {
     var uniqueKey: String?
     
     var students = [StudentInformation]()
-    
-    class func sharedInstance() -> Student {
-        struct Singleton {
-            static var sharedInstance = Student()
-        }
-        return Singleton.sharedInstance
-    }
 }
