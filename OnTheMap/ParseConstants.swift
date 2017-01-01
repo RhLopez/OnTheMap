@@ -20,8 +20,8 @@ extension Parse {
         
         //Mark: URL's
         static let ApiScheme = "https"
-        static let ApiHost = "api.parse.com"
-        static let ApiPath = "/1"
+        static let ApiHost = "parse.udacity.com"
+        static let ApiPath = "/parse"
     }
     
     struct Methods {
